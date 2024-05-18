@@ -1,0 +1,68 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net6.0</TargetFramework>
+        <!--<RuntimeIdentifier>cosmos</RuntimeIdentifier>-->
+        <Platform>cosmos</Platform>
+        <SupportsX86Intrinsics>false</SupportsX86Intrinsics>
+        <SelfContained>True</SelfContained>
+    </PropertyGroup>
+
+    <PropertyGroup>
+        <EnableGDB>False</EnableGDB>
+        <StartCosmosGDB>False</StartCosmosGDB>
+        <VisualStudioDebugPort>Pipe: Cosmos\Serial</VisualStudioDebugPort>
+        <CosmosDebugPort>Serial: COM1</CosmosDebugPort>
+        <Launch>VMware</Launch>
+        <Profile>VMware</Profile>
+        <Description>Use VMware Player or Workstation to deploy and debug.</Description>
+        <PxeInterface>192.168.0.8</PxeInterface>
+        <CompressionType>Gzip</CompressionType>
+        <RemoveBootDebugOutput>True</RemoveBootDebugOutput>
+        <DebugEnabled>False</DebugEnabled>
+        <VMWareEdition>Workstation</VMWareEdition>
+        <CompileVBEMultiboot>True</CompileVBEMultiboot>
+        <VBEResolution>1920x1080x32</VBEResolution>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <None Remove="cursor.bmp" />
+      <None Remove="Files\bmp\APP.bmp" />
+      <None Remove="Files\bmp\cursor.bmp" />
+      <None Remove="Files\bmp\logo.bmp" />
+      <None Remove="Files\bmp\logo.png" />
+      <None Remove="Files\bmp\logo30.bmp" />
+      <None Remove="Files\bmp\NONE.bmp" />
+      <None Remove="Files\bmp\REG.bmp" />
+      <None Remove="Files\bmp\TXT.bmp" />
+      <None Remove="Files\bmp\wallpaper.bmp" />
+      <None Remove="Files\bmp\WIN.bmp" />
+      <None Remove="Files\ttf\Ubuntu.ttf" />
+      <None Remove="logo.bmp" />
+      <None Remove="logo30.bmp" />
+      <None Remove="wallpaper.bmp" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <EmbeddedResource Include="Files\bmp\APP.bmp" />
+      <EmbeddedResource Include="Files\bmp\cursor.bmp" />
+      <EmbeddedResource Include="Files\bmp\logo.bmp" />
+      <EmbeddedResource Include="Files\bmp\logo.png" />
+      <EmbeddedResource Include="Files\bmp\logo30.bmp" />
+      <EmbeddedResource Include="Files\bmp\NONE.bmp" />
+      <EmbeddedResource Include="Files\bmp\REG.bmp" />
+      <EmbeddedResource Include="Files\bmp\TXT.bmp" />
+      <EmbeddedResource Include="Files\bmp\wallpaper.bmp" />
+      <EmbeddedResource Include="Files\bmp\WIN.bmp" />
+      <EmbeddedResource Include="Files\ttf\Ubuntu.ttf" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Cosmos.Build" Version="0-*" NoWarn="NU1604" />
+        <PackageReference Include="Cosmos.Debug.Kernel" Version="0-*" NoWarn="NU1604" />
+        <PackageReference Include="Cosmos.System2" Version="0-*" NoWarn="NU1604" />
+        <PackageReference Include="Cosmos.Plugs" Version="0-*" NoWarn="NU1604" />
+        <PackageReference Include="CosmosTTF" Version="4.0.1" />
+    </ItemGroup>
+
+</Project>
