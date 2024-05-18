@@ -27,6 +27,10 @@ User Account System
 </p>
 
 ## GUI
+- **Fully working mouse**
+- **Desktop icon grid**
+- **Taskbar**
+- **Wallpaper**
 <p align="center">
  <picture>
     <source srcset="https://github.com/GeorgeFence/ShardOS/blob/a2dc118e06e50614d0a7fb71cca4c4dda4b04498/screenshot.png">
