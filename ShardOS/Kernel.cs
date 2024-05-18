@@ -42,7 +42,7 @@ namespace ShardOS
             DelayCode(500);
             DrawStatus("Starting Shard OS");
         }
-        protected override void BeforeRun()
+        protected override void BeforeRun() 
         {
             DrawStatus("Now running BeforeRun");
             DelayCode(200);
