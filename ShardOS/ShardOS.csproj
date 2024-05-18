@@ -39,6 +39,7 @@
       <None Remove="Files\bmp\WIN.bmp" />
       <None Remove="Files\ttf\Ubuntu.ttf" />
       <None Remove="logo.bmp" />
+      <None Remove="logo.png" />
       <None Remove="logo30.bmp" />
       <None Remove="wallpaper.bmp" />
     </ItemGroup>
@@ -55,6 +56,7 @@
       <EmbeddedResource Include="Files\bmp\wallpaper.bmp" />
       <EmbeddedResource Include="Files\bmp\WIN.bmp" />
       <EmbeddedResource Include="Files\ttf\Ubuntu.ttf" />
+      <EmbeddedResource Include="logo.png" />
     </ItemGroup>
 
     <ItemGroup>
