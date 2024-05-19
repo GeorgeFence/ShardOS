@@ -2,7 +2,9 @@
 using Cosmos.System.Graphics;
 using Cosmos.System.Graphics.Fonts;
 using IL2CPU.API.Attribs;
+using ShardOS.Apps;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Text;
@@ -13,15 +15,35 @@ namespace ShardOS
 {
     public class Kernel : Sys.Kernel
     {
-        public static VBECanvas Canvas;
+        public static Canvas Canvas;
         public static Mode Mode;
         public static Bitmap logo512;
         public static bool IsBooting = true;
         public static int Ypos = 0;
+
+        public static int DefaultFontHeight = 14; //14 best :)
+
         [ManifestResourceStream(ResourceName = "ShardOS.Files.bmp.logo.bmp")] public static byte[] rawLogo512;
         [ManifestResourceStream(ResourceName = "ShardOS.Files.bmp.logo30.bmp")] public static byte[] rawLogo30;
         [ManifestResourceStream(ResourceName = "ShardOS.Files.bmp.wallpaper.bmp")] public static byte[] rawWallpaper;
         [ManifestResourceStream(ResourceName = "ShardOS.Files.bmp.cursor.bmp")] public static byte[] rawCursor;
+
+        [ManifestResourceStream(ResourceName = "ShardOS.build.txt")] public static byte[] rawBuildNumber;
+
+        [ManifestResourceStream(ResourceName = "ShardOS.Files.bmp.exit.bmp")] public static byte[] rawExit;
+        [ManifestResourceStream(ResourceName = "ShardOS.Files.bmp.serviceapp.bmp")] public static byte[] rawServiceApp;
+        [ManifestResourceStream(ResourceName = "ShardOS.Files.bmp.systemapp.bmp")] public static byte[] rawSystemApp;
+        [ManifestResourceStream(ResourceName = "ShardOS.Files.bmp.userapp.bmp")] public static byte[] rawUserApp;
+        [ManifestResourceStream(ResourceName = "ShardOS.Files.bmp.unknownapp.bmp")] public static byte[] rawUnknownApp;
+        [ManifestResourceStream(ResourceName = "ShardOS.Files.bmp.user24.bmp")] public static byte[] rawUser24;
+        [ManifestResourceStream(ResourceName = "ShardOS.Files.bmp.settings24.bmp")] public static byte[] rawSettings24;
+        public static Bitmap ExitApp = new Bitmap(rawExit);
+        public static Bitmap ServiceApp = new Bitmap(rawServiceApp);
+        public static Bitmap SystemApp = new Bitmap(rawSystemApp);
+        public static Bitmap UserApp = new Bitmap(rawUserApp);
+        public static Bitmap UnknownApp = new Bitmap(rawUnknownApp);
+        public static Bitmap User24 = new Bitmap(rawUser24);
+        public static Bitmap Settings24 = new Bitmap(rawSettings24);
 
         [ManifestResourceStream(ResourceName = "ShardOS.Files.bmp.APP.bmp")] public static byte[] rawFileApp;
         [ManifestResourceStream(ResourceName = "ShardOS.Files.bmp.NONE.bmp")] public static byte[] rawFileNone;
@@ -30,17 +52,23 @@ namespace ShardOS
         [ManifestResourceStream(ResourceName = "ShardOS.Files.bmp.WIN.bmp")] public static byte[] rawWinApp;
 
         [ManifestResourceStream(ResourceName = "ShardOS.Files.ttf.Ubuntu.ttf")] public static byte[] rawFontUbuntu;
+
+        public static string BuildNumber = "";
         protected override void OnBoot()
         {
             base.OnBoot();
             IsBooting = true;
             Mode = new Mode(1920,1080,ColorDepth.ColorDepth32);
-            Canvas = new VBECanvas(Mode);
+            Canvas = FullScreenCanvas.GetFullScreenCanvas(Mode);
             logo512 = new Bitmap(rawLogo512);
             Canvas.DrawImageAlpha(logo512,(int)(Mode.Width / 2 - 256), (int)(Mode.Height / 5));
             Canvas.Display();
+            BuildNumber = System.Text.Encoding.UTF8.GetString(rawBuildNumber);
             DelayCode(500);
             DrawStatus("Starting Shard OS");
+            DelayCode(500);
+            DrawStatus("Running build " + BuildNumber.ToString());
+            DelayCode(1500);
         }
         protected override void BeforeRun() 
         {
@@ -58,6 +86,10 @@ namespace ShardOS
             DelayCode(500);
             DrawStatus("Starting GUI");
             DelayCode(500);
+            if(UAS.Users.Count == 1)
+            {
+                UAS.ActiveUser = UAS.Users[0];
+            }
             try
             {
                 DesktopGrid.gridItems.Add(new GridItem("Registry", new Bitmap(rawFileReg), 0, 0));
@@ -68,15 +100,13 @@ namespace ShardOS
             {
                 DrawStatus("DesktopGrid: " + ex.Message, Color.Red);
             }
+            Welcome.Start();
             IsBooting = false;
         }
 
         protected override void Run()
         {
-            while (true)
-            {
-                Desktop.Update();
-            }
+            Desktop.Update();
         }
 
         public static void DelayCode(uint milliseconds)
@@ -103,6 +133,19 @@ namespace ShardOS
                 Canvas.DrawString(text, PCScreenFont.Default, color, (int)(Mode.Width / 2 - (text.Length / 2 * 8)), (int)((Mode.Height / 5) * 4));
                 Canvas.Display();
             }
+        }
+
+        public static void DrawStatusForce(string text)
+        {
+            Canvas.DrawFilledRectangle(Color.Black, 0, (int)((Mode.Height / 5) * 4), (int)Mode.Width, 16);
+            Canvas.DrawString(text, PCScreenFont.Default, Color.White, (int)(Mode.Width / 2 - (text.Length / 2 * 8)), (int)((Mode.Height / 5) * 4));
+            Canvas.Display();
+        }
+        public static void DrawStatusForce(string text, Color color)
+        {
+            Canvas.DrawFilledRectangle(Color.Black, 0, (int)((Mode.Height / 5) * 4), (int)Mode.Width, 16);
+            Canvas.DrawString(text, PCScreenFont.Default, color, (int)(Mode.Width / 2 - (text.Length / 2 * 8)), (int)((Mode.Height / 5) * 4));
+            Canvas.Display();
         }
 
         public static void Shutdown(int mode)
