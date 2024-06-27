@@ -28,26 +28,29 @@ namespace ShardOS
                 string datafile = Files.ReadText("0:\\registers.reg");
                 //Kernel.DrawStatus(datafile);
                 //Kernel.DelayCode(2000);
-                string[] s = datafile.Split(';');
-                 
-                for (int i = 0; i < s.Count(); i++)
+                if(datafile != "")
                 {
-                    RegisterType t;
-                    string[] s3 = s[i].Split(",");
-                    if (s3[0] == "REG_COLOR")
-                    {
-                        t = RegisterType.REG_COLOR;
-                    }
-                    else if (s3[0] == "REG_STR")
-                    {
-                        t = RegisterType.REG_STR;
-                    }
-                    else
-                    {
-                        t = RegisterType.Unknown;
-                    }
+                    string[] s = datafile.Split(';');
 
-                    registers.Add(new Register(s3[1], s3[2], t));
+                    for (int i = 0; i < s.Count(); i++)
+                    {
+                        RegisterType t;
+                        string[] s3 = s[i].Split(",");
+                        if (s3[0] == "REG_COLOR")
+                        {
+                            t = RegisterType.REG_COLOR;
+                        }
+                        else if (s3[0] == "REG_STR")
+                        {
+                            t = RegisterType.REG_STR;
+                        }
+                        else
+                        {
+                            t = RegisterType.Unknown;
+                        }
+
+                        registers.Add(new Register(s3[1], s3[2], t));
+                    }
                 }
             }
             catch (Exception ex) { Kernel.DrawStatus(ex.Message, Color.Red); Kernel.DelayCode(2000); }

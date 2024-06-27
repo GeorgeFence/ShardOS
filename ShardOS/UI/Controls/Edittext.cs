@@ -50,18 +50,20 @@ namespace ShardOS.UI.Controls
             {
                 Selected = false;
             }
-            if(Key.KeyPressed && Selected)
+            //Keyboard Input
+            if (Selected && KeyboardEx.IsKeyPressed)
             {
-                if(Key.keyevent.Key == ConsoleKey.Backspace && Text != "")
+                if (KeyboardEx.k.Key == ConsoleKey.Backspace && Text != "")
                 {
                     Text = Text.Remove(Text.Length - 1);
                 }
                 else
                 {
-                    Text = Text + Key.keyevent.KeyChar.ToString();
+                    Text = Text + KeyboardEx.k.KeyChar.ToString();
                 }
             }
-
+            
+            //Scroll
             if (Text.Length > (W / 8 - 3))
             {
                 string s = " ";

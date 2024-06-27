@@ -11,6 +11,8 @@ namespace ShardOS
     public static class KeyboardEx
     {
         private static readonly List<Action<ConsoleKeyInfo>> Callbacks;
+        public static ConsoleKeyInfo k;
+        public static bool IsKeyPressed = false;
 
         static KeyboardEx()
         {
@@ -63,5 +65,7 @@ namespace ShardOS
             }
             return s;
         }
+
+
     }
 }

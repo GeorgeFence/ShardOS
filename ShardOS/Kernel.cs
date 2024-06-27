@@ -1,4 +1,5 @@
 ﻿using Cosmos.HAL;
+using Cosmos.System;
 using Cosmos.System.Graphics;
 using Cosmos.System.Graphics.Fonts;
 using IL2CPU.API.Attribs;
@@ -9,6 +10,8 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Text;
 using static System.Net.Mime.MediaTypeNames;
+using Console = System.Console;
+using Power = Cosmos.HAL.Power;
 using Sys = Cosmos.System;
 
 namespace ShardOS
@@ -86,10 +89,7 @@ namespace ShardOS
             DelayCode(500);
             DrawStatus("Starting GUI");
             DelayCode(500);
-            if(UAS.Users.Count == 1)
-            {
-                UAS.ActiveUser = UAS.Users[0];
-            }
+            
             try
             {
                 DesktopGrid.gridItems.Add(new GridItem("Registry", new Bitmap(rawFileReg), 0, 0));
@@ -100,12 +100,23 @@ namespace ShardOS
             {
                 DrawStatus("DesktopGrid: " + ex.Message, Color.Red);
             }
-            Welcome.Start();
+            Logon.Start();
             IsBooting = false;
         }
 
         protected override void Run()
         {
+            //Keyboard Input
+            KeyboardEx.k = new ConsoleKeyInfo();
+            KeyboardEx.IsKeyPressed = false;
+            PS2Keyboard.WaitForKey();
+            while (Console.KeyAvailable)
+            {
+                KeyboardEx.k = Console.ReadKey(true);
+                KeyboardEx.IsKeyPressed = true;
+            }
+
+            //Gui
             Desktop.Update();
         }
 

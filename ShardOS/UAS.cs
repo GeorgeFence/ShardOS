@@ -11,7 +11,7 @@ namespace ShardOS
     public static class UAS
     {
         public static List<User> Users = new List<User>();
-        public static User ActiveUser;
+        public static User ActiveUser = new User("defaultUser","","0:\\Users\\defaultUser");
         public static void Initialize()
         {
             if (!Files.FileExists("0:\\users.reg"))
