@@ -22,7 +22,7 @@ User Account System
 <p align="center">
  <picture>
     <source srcset="https://github.com/GeorgeFence/ShardOS/blob/a2dc118e06e50614d0a7fb71cca4c4dda4b04498/screenshot2.png">
-    <img width=60% src="">
+    <img width=100% src="">
   </picture>
 </p>
 
@@ -33,8 +33,8 @@ User Account System
 - **Wallpaper**
 <p align="center">
  <picture>
-    <source srcset="https://github.com/GeorgeFence/ShardOS/blob/a2dc118e06e50614d0a7fb71cca4c4dda4b04498/screenshot.png">
-    <img width=60% src="">
+    <source srcset="https://github.com/GeorgeFence/ShardOS/blob/c3abbd9ae76307ab799da59ea3a702a9e9e5584d/screenshot.png">
+    <img width=100% src="">
   </picture>
 </p>
 
