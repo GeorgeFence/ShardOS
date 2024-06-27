@@ -8,6 +8,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Reflection;
 using System.Text;
 using static System.Net.Mime.MediaTypeNames;
 using Console = System.Console;
@@ -100,8 +101,8 @@ namespace ShardOS
             {
                 DrawStatus("DesktopGrid: " + ex.Message, Color.Red);
             }
-            Logon.Start();
             IsBooting = false;
+            Logon.Start();
         }
 
         protected override void Run()
@@ -114,6 +115,13 @@ namespace ShardOS
             {
                 KeyboardEx.k = Console.ReadKey(true);
                 KeyboardEx.IsKeyPressed = true;
+            }
+
+            //Mouse Input
+            Desktop.MouseState = MouseState.None;
+            if(MouseManager.MouseState != MouseState.None)
+            {
+                Desktop.MouseState = MouseManager.MouseState;
             }
 
             //Gui
@@ -199,6 +207,7 @@ namespace ShardOS
                 if(Console.ReadLine().ToLower() == "y")
                 {
                     UAS.CreateUser(new User(username, password, "0:\\Users\\"+ username + "\\"));
+                    UAS.Reload();
                     Canvas.DrawString("Done", PCScreenFont.Default, Color.White, 0, (Ypos * 16));
                     Canvas.Display();
                     Ypos++;

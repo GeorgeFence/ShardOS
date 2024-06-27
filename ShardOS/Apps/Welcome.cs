@@ -41,7 +41,7 @@ namespace ShardOS.Apps
             WelcomeLabel = new Label(3, 3, 8, "Welcome back " + UAS.ActiveUser.Username + "!");
             WelcomeLabel2 = new Label(3, 19, 8, "Enjoy while ShardOS is running");
             edittext = new Edittext(3, 35, 200, 20);
-            WelcomeButton = new Button(window.PanelW - 42, window.PanelH - 26, 32, 16, 0, "OK", true, System.Drawing.Color.White, System.Drawing.Color.Black, System.Drawing.Color.Red);
+            WelcomeButton = new Button(window.PanelW - 42, window.PanelH - 26, 32, 16, 0, "OK", true, System.Drawing.Color.White, System.Drawing.Color.SteelBlue, System.Drawing.Color.Black, System.Drawing.Color.Red);
             window.Controls.Add(WelcomeLabel);
             window.Controls.Add(WelcomeLabel2);
             window.Controls.Add(WelcomeButton);
@@ -51,7 +51,7 @@ namespace ShardOS.Apps
 
         public static void Stop()
         {
-            WindowManager.Stop(window);
+            WindowManager.StopAll();
         }
     }
 }

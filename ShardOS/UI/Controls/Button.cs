@@ -15,6 +15,8 @@ namespace ShardOS.UI.Controls
     {
         private System.Drawing.Color Bg;
 
+        private System.Drawing.Color Bg2;
+
         private System.Drawing.Color Fg;
 
         private System.Drawing.Color Outline;
@@ -31,10 +33,11 @@ namespace ShardOS.UI.Controls
         public int W;
         public int H;
 
-        public Button(int X, int Y, ushort Width, ushort Height, ushort Radius, string Text, bool Center, System.Drawing.Color Bg, System.Drawing.Color Fg, System.Drawing.Color Outline)
+        public Button(int X, int Y, ushort Width, ushort Height, ushort Radius, string Text, bool Center, System.Drawing.Color Bg,Color BgClick, System.Drawing.Color Fg, System.Drawing.Color Outline)
             : base(X, Y, Width, Height)
         {
             this.Bg = Bg;
+            this.Bg2 = BgClick;
             this.Fg = Fg;
             this.Xpos = X;
             this.Ypos = Y;
@@ -54,10 +57,10 @@ namespace ShardOS.UI.Controls
             Desktop.DrawToSurface(Desktop.surface, Kernel.DefaultFontHeight, (X + W / 2 + Xpos) - ((Text.Length / 2) * 8), (Y + H / 4 + Ypos - 4), Text, Fg);
             if (MouseEx.IsMouseWithin(X + Xpos, Y + Ypos, (ushort)W, (ushort)H))
             {
-                if (MouseManager.MouseState == MouseState.Left && Desktop.prevMouseState != MouseState.Left && sel)
+                if (Desktop.MouseState == MouseState.Left && Desktop.prevMouseState != MouseState.Left && sel)
                 {
                     IsClicked = true;
-                    canvas.DrawFilledRectangle(System.Drawing.Color.SteelBlue, X + Xpos, Y + Ypos, W, H);
+                    canvas.DrawFilledRectangle(Bg2, X + Xpos, Y + Ypos, W, H);
                     canvas.DrawRectangle(Outline, X + Xpos, Y + Ypos, W, H);
                     Desktop.DrawToSurface(Desktop.surface, Kernel.DefaultFontHeight, (X + W / 2 + Xpos) - ((Text.Length / 2) * 8), (Y + H / 4 + Ypos - 4), Text, Fg);
                 }

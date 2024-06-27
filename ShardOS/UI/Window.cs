@@ -40,6 +40,8 @@ public class Window : Control
     internal int IX;
     internal int IY;
 
+    public Bitmap backgroundimage;
+
     public Bitmap Icon;
     public DesignType Wtype;
     public PermissionsType Ptype;
@@ -109,9 +111,7 @@ public class Window : Control
 
                     Canvas.DrawImageAlpha(Kernel.ExitApp, X + WinW - 27, Y + 5);
 
-                    ConsoleKeyInfo? key = KeyboardEx.ReadKey();
-
-                    ProcessControls(base.X, base.Y + 32, Controls, key, sel);
+                    ProcessControls(base.X, base.Y + 32, Controls, KeyboardEx.k, sel);
                     Desktop.DrawToSurface(Desktop.surface, Kernel.DefaultFontHeight + 2, base.X + 3, base.Y + 14 - ((Kernel.DefaultFontHeight + 2) / 2), Title, Color.White);
                     break;
 
@@ -129,8 +129,7 @@ public class Window : Control
                         Canvas.DrawFilledRectangle(System.Drawing.Color.Green, base.X, base.Y, 0, 32);
                     }
                     Canvas.DrawFilledRectangle(System.Drawing.Color.GhostWhite, base.X, base.Y + 32, (ushort)(base.Width - 32), base.Height);
-                    ConsoleKeyInfo? key5 = KeyboardEx.ReadKey();
-                    ProcessControls(base.X + 6, base.Y + 33, Controls, key5, sel);
+                    ProcessControls(base.X + 6, base.Y + 33, Controls, KeyboardEx.k, sel);
                     Desktop.DrawToSurface(Desktop.surface, Kernel.DefaultFontHeight + 2, base.X + 8, base.Y + (32 / 2) - ((Kernel.DefaultFontHeight + 2) / 2), Title, Color.White);
                     break;
 
@@ -147,8 +146,7 @@ public class Window : Control
 
                         Canvas.DrawFilledRectangle(System.Drawing.Color.Black, X + 5, Y + 32, (ushort)(WinW - 10), (ushort)(WinH - 37));
                         Canvas.DrawFilledRectangle(System.Drawing.Color.White, X + 6, Y + 33, (ushort)(WinW - 12), (ushort)(WinH - 39));
-                        ConsoleKeyInfo? key3 = KeyboardEx.ReadKey();
-                        ProcessControls(base.X + 6, base.Y + 33, Controls, key3, sel);
+                        ProcessControls(base.X + 6, base.Y + 33, Controls, KeyboardEx.k, sel);
                         Desktop.DrawToSurface(Desktop.surface, Kernel.DefaultFontHeight, base.X + 5, base.Y + 8, Title, Color.White);
                     }
                     else if (Ptype == PermissionsType.System)
@@ -161,8 +159,7 @@ public class Window : Control
 
                         Canvas.DrawFilledRectangle(System.Drawing.Color.Black, X + 5, Y + 32, (ushort)(WinW - 10), (ushort)(WinH - 37));
                         Canvas.DrawFilledRectangle(System.Drawing.Color.White, X + 6, Y + 33, (ushort)(WinW - 12), (ushort)(WinH - 39));
-                        ConsoleKeyInfo? key6 = KeyboardEx.ReadKey();
-                        ProcessControls(base.X + 6, base.Y + 33, Controls, key6, sel);
+                        ProcessControls(base.X + 6, base.Y + 33, Controls, KeyboardEx.k, sel);
                         Desktop.DrawToSurface(Desktop.surface, Kernel.DefaultFontHeight, base.X + 5, base.Y + 8, Title, Color.White);
 
                     }
@@ -176,17 +173,20 @@ public class Window : Control
 
                         Canvas.DrawFilledRectangle(System.Drawing.Color.Black, X + 5, Y + 32, (ushort)(WinW - 10), (ushort)(WinH - 37));
                         Canvas.DrawFilledRectangle(System.Drawing.Color.White, X + 6, Y + 33, (ushort)(WinW - 12), (ushort)(WinH - 39));
-                        ConsoleKeyInfo? key4 = KeyboardEx.ReadKey();
-                        ProcessControls(base.X + 6, base.Y + 33, Controls, key4, sel);
+                        ProcessControls(base.X + 6, base.Y + 33, Controls, KeyboardEx.k, sel);
                         Desktop.DrawToSurface(Desktop.surface, Kernel.DefaultFontHeight, base.X + 5, base.Y + 8, Title, Color.White);
 
                     }
                     break;
 
                 case DesignType.Blank:
-                    Canvas.DrawFilledRectangle(System.Drawing.Color.GhostWhite, base.X, base.Y, WinW, WinH);
-                    ConsoleKeyInfo? key7 = KeyboardEx.ReadKey();
-                    ProcessControls(base.X, base.Y, Controls, key7, sel);
+                    Canvas.DrawFilledRectangle(Background, base.X, base.Y, WinW, WinH);
+                    ProcessControls(base.X, base.Y, Controls, KeyboardEx.k, sel);
+                    break;
+
+                case DesignType.LUI:
+                    Canvas.DrawImage(backgroundimage, 0, 0);
+                    ProcessControls(base.X, base.Y, Controls, KeyboardEx.k, sel);
                     break;
             }
             base.act();

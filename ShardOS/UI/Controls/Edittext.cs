@@ -26,6 +26,9 @@ namespace ShardOS.UI.Controls
         public int W;
         public int H;
 
+        public Color bg = Color.White;
+        public Color fg = Color.Black;
+
         public Edittext(int X, int Y, int W, int H)
             : base(X, Y, 0, 0)
         {
@@ -37,11 +40,11 @@ namespace ShardOS.UI.Controls
 
         public override void Update(Canvas Canvas, int X, int Y, bool sel)
         {
-            Canvas.DrawFilledRectangle(System.Drawing.Color.White, Xpos + X, Ypos + Y, W, H);
+            Canvas.DrawFilledRectangle(bg, Xpos + X, Ypos + Y, W, H);
             Canvas.DrawRectangle(System.Drawing.Color.Black, Xpos + X, Ypos + Y, W, H);
             if (MouseEx.IsMouseWithin(Xpos + X, Ypos + Y, (ushort)W,(ushort)H))
             {
-                if(MouseManager.MouseState == MouseState.Left && Desktop.prevMouseState != MouseState.Left)
+                if(Desktop.MouseState == MouseState.Left && Desktop.prevMouseState != MouseState.Left)
                 {
                     Selected = true;
                 }
@@ -50,16 +53,17 @@ namespace ShardOS.UI.Controls
             {
                 Selected = false;
             }
+
             //Keyboard Input
             if (Selected && KeyboardEx.IsKeyPressed)
             {
                 if (KeyboardEx.k.Key == ConsoleKey.Backspace && Text != "")
                 {
-                    Text = Text.Remove(Text.Length - 1);
+                    Text = Text.Substring(0, Text.Length - 1);
                 }
                 else
                 {
-                    Text = Text + KeyboardEx.k.KeyChar.ToString();
+                    Text += KeyboardEx.k.KeyChar.ToString();
                 }
             }
             
@@ -77,17 +81,17 @@ namespace ShardOS.UI.Controls
                         }
                     }
                 }
-                Desktop.DrawToSurface(Desktop.surface, Kernel.DefaultFontHeight, (X + Xpos + 3), (Y + Ypos + 3), s, Color.Black);
+                Desktop.DrawToSurface(Desktop.surface, Kernel.DefaultFontHeight, (X + Xpos + 3), (Y + Ypos + 3), s, fg);
                 Canvas.DrawFilledRectangle(System.Drawing.Color.Blue,(X + Xpos + (W - (Text.Length -(W / 8)))), (Y + Ypos + H - 2),20, 2);
             }
             else
             {
-                Desktop.DrawToSurface(Desktop.surface, Kernel.DefaultFontHeight, (X + Xpos + 3), (Y + Ypos + 3), Text, Color.Black);
+                Desktop.DrawToSurface(Desktop.surface, Kernel.DefaultFontHeight, (X + Xpos + 3), (Y + Ypos + 3), Text, fg);
             }
 
             if (Selected)
             {
-                Canvas.DrawFilledRectangle(System.Drawing.Color.DimGray,(X + Xpos + 3) + ((Text.Length) * 8), (Y + Ypos + 3), 2,16);
+                Canvas.DrawFilledRectangle(System.Drawing.Color.DimGray,(X + Xpos + 3) + ((Text.Length) * 6), (Y + Ypos + 3), 2,16);
             }
         }
     }

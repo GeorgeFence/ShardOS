@@ -38,6 +38,10 @@ namespace ShardOS
             }
             catch(Exception ex) { }
         }
+        public static void StopAll()
+        {
+            Windows.Clear();
+        }
 
         public static void Update(Canvas Canvas)
         {

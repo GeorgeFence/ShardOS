@@ -11,6 +11,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Threading;
 using System.Drawing;
+using Cosmos.System.Graphics;
 
 namespace ShardOS.Apps
 {
@@ -19,6 +20,7 @@ namespace ShardOS.Apps
         public static Label Label = null!;
         public static Button ButtonLogin = null!;
         public static Edittext edittext = null!;
+        public static Panel panel = null!;
         public static Window window;
 
         public static string UserName = "";
@@ -32,6 +34,26 @@ namespace ShardOS.Apps
 
         public static void Update()
         {
+            for (int i = 0; i < UAS.Users.Count; i++)
+            {
+                Color col = Desktop.Dark;
+                if (MouseEx.IsMouseWithin(0, (int)(Kernel.Mode.Height - (UAS.Users.Count * 64) + (i * 64)), 192, 64))
+                {
+                    if (Desktop.MouseState == MouseState.Left && Desktop.prevMouseState != MouseState.Left)
+                    {
+                        col = Color.FromArgb(45, 45, 45);
+                        Logon.UserName = UAS.Users[i].Username;
+                    }
+                }
+                if (Logon.UserName == UAS.Users[i].Username)
+                {
+                    col = Color.FromArgb(45, 45, 45);
+                }
+                Kernel.Canvas.DrawFilledRectangle(col, 0, (int)(Kernel.Mode.Height - (UAS.Users.Count * 64) + (i * 64)), 192, 64);
+                Desktop.DrawToSurface(Desktop.surface, 40, 3, (int)(Kernel.Mode.Height - (UAS.Users.Count * 64) + (i * 64) - 6), UAS.Users[i].Username, Color.Gray);
+                Desktop.DrawToSurface(Desktop.surface, 20, 3, (int)(Kernel.Mode.Height - (UAS.Users.Count * 64) + (i * 64) + 40), UAS.Users[i].UserFolderPath, Color.DarkGray);
+            }
+
             Label.Text = "Welcome back " + UserName + "!";
             if (ButtonLogin.IsClicked)
             {
@@ -57,14 +79,25 @@ namespace ShardOS.Apps
 
         public static void Start()
         {
-            window = new Window((int)(Kernel.Mode.Width / 2 - 160), (int)(Kernel.Mode.Height / 2 - 120), 320, 240, "LogonUI", Update, DesignType.Blank, PermissionsType.User, Kernel.UnknownApp);
-            Label = new Label(3, 3, 8, "Welcome back " + UserName + "!");
-            edittext = new Edittext(3, 35, 200, 20);
-            ButtonLogin = new Button(window.PanelW - 42, window.PanelH - 26, 32, 16, 0, "OK", true, System.Drawing.Color.White, System.Drawing.Color.Black, System.Drawing.Color.Red);
+            WindowManager.StopAll();
+            window = new Window(0,0,(ushort)Kernel.Canvas.Mode.Width,(ushort)Kernel.Canvas.Mode.Height, "LogonUI", Update, DesignType.LUI, PermissionsType.User, Kernel.UnknownApp);
+            window.backgroundimage = Desktop.wallpaper;
+            panel = new Panel(window.PanelW/2 - 160, window.PanelH/2 - 120, 320, 240, Desktop.Dark);
+            Label = new Label(panel.X + 5, panel.Y + 5, 8, "Welcome back " + UserName + "!");
+            Label.fg = Color.White;
+            edittext = new Edittext(panel.X + 5, panel.Y + 22, 310, 20);
+            edittext.fg = Color.White;
+            edittext.bg = Desktop.DarkL;
+            ButtonLogin = new Button(panel.X + panel.Widt - 37, panel.Y + panel.Heig - 21, 32, 16, 0, "OK", true, Desktop.Dark,Desktop.DarkL, System.Drawing.Color.White, Color.Black);
+            window.Controls.Add(panel);
             window.Controls.Add(Label);
             window.Controls.Add(ButtonLogin);
             window.Controls.Add(edittext);
             WindowManager.Add(window);
+            if (UserName == "")
+            {
+                UserName = UAS.Users[0].Username;
+            }
         }
 
         public static void Stop()

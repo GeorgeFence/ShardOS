@@ -18,6 +18,8 @@ namespace ShardOS.UI.Controls
         public int Ypos;
         public int Px;
 
+        public Color fg = Color.Black;
+
 
         public Label(int X, int Y, int Px, string Contents)
             : base(X, Y, 0, 0)
@@ -30,7 +32,7 @@ namespace ShardOS.UI.Controls
 
         public override void Update(Canvas Canvas, int X, int Y, bool sel)
         {
-            Desktop.DrawToSurface(Desktop.surface, Kernel.DefaultFontHeight, (X + Xpos), (Y + Ypos), Text, Color.Black);
+            Desktop.DrawToSurface(Desktop.surface, Kernel.DefaultFontHeight, (X + Xpos), (Y + Ypos), Text, fg);
         }
     }
 }

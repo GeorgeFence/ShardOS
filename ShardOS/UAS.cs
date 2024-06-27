@@ -11,7 +11,7 @@ namespace ShardOS
     public static class UAS
     {
         public static List<User> Users = new List<User>();
-        public static User ActiveUser = new User("defaultUser","","0:\\Users\\defaultUser");
+        public static User ActiveUser = new User("defaultUser","default","0:\\Users\\defaultUser");
         public static void Initialize()
         {
             if (!Files.FileExists("0:\\users.reg"))
@@ -22,6 +22,8 @@ namespace ShardOS
             Reload();
             if(Users.Count == 0)
             {
+                Kernel.DrawStatus("Creating defaultUser");
+                CreateUser(new User("defaultUser", "default", "0:\\Users\\defaultUser"));
                 Kernel.DrawStatus("Creating user");
                 Kernel.DelayCode(1000);
                 Kernel.Shutdown(3);
@@ -31,6 +33,7 @@ namespace ShardOS
         {
             try
             {
+                Users.Clear();
                 string datafile = Files.ReadText("0:\\users.reg");
                 string[] s = datafile.Split(';');
 
@@ -41,7 +44,7 @@ namespace ShardOS
                     Users.Add(new User(s3[0], s3[1], s3[2]));
                 }
             }
-            catch (Exception ex) { Kernel.DrawStatus("UAS Exception: " + ex.Message, Color.Red); Kernel.DelayCode(2000); }
+            catch (Exception ex) { Kernel.DrawStatusForce("UAS Exception: " + ex.Message, Color.Red); Kernel.DelayCode(2000); }
 
         }
         public static void CreateUser(User user)

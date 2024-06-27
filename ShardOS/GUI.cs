@@ -28,7 +28,9 @@ namespace ShardOS
         public static TTFFont font;
 
         public static Color Dark = Color.FromArgb(30,30,30);
+        public static Color DarkL = Color.FromArgb(45, 45, 45);
 
+        public static MouseState MouseState;
         public static MouseState prevMouseState;
 
         private static int Count = 0;
@@ -185,31 +187,6 @@ namespace ShardOS
     {
         public static void Draw()
         {
-            Kernel.Canvas.DrawImage(Desktop.wallpaper, 0, 0);
-            if(Logon.UserName == "")
-            {
-                Logon.UserName = UAS.Users[0].Username;
-            }
-
-            for (int i = 0;i < UAS.Users.Count;i++)
-            {
-                Color col = Desktop.Dark;
-                if (MouseEx.IsMouseWithin(0, (int)(Kernel.Mode.Height - (UAS.Users.Count * 64) + (i * 64)), 192,64))
-                {
-                    if (MouseManager.MouseState == MouseState.Left && Desktop.prevMouseState != MouseState.Left)
-                    {
-                        col = Color.FromArgb(45, 45, 45);
-                        Logon.UserName = UAS.Users[i].Username;
-                    }
-                }
-                if(Logon.UserName == UAS.Users[i].Username)
-                {
-                    col = Color.FromArgb(45, 45, 45);
-                }
-                Kernel.Canvas.DrawFilledRectangle(col, 0, (int)(Kernel.Mode.Height - (UAS.Users.Count * 64) + (i * 64)), 192, 64);
-                Desktop.DrawToSurface(Desktop.surface, 40, 3, (int)(Kernel.Mode.Height - (UAS.Users.Count * 64) + (i * 64) - 6), UAS.Users[i].Username, Color.Gray);
-                Desktop.DrawToSurface(Desktop.surface, 20, 3, (int)(Kernel.Mode.Height - (UAS.Users.Count * 64) + (i * 64) + 40), UAS.Users[i].UserFolderPath, Color.DarkGray);
-            }
             WindowManager.Update(Kernel.Canvas);
             Kernel.Canvas.DrawImageAlpha(Desktop.cursor, (int)MouseManager.X, (int)MouseManager.Y);
             Kernel.Canvas.Display();
