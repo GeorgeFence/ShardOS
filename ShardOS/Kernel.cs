@@ -38,22 +38,26 @@ namespace ShardOS
         [ManifestResourceStream(ResourceName = "ShardOS.Files.bmp.serviceapp.bmp")] public static byte[] rawServiceApp;
         [ManifestResourceStream(ResourceName = "ShardOS.Files.bmp.systemapp.bmp")] public static byte[] rawSystemApp;
         [ManifestResourceStream(ResourceName = "ShardOS.Files.bmp.userapp.bmp")] public static byte[] rawUserApp;
-        [ManifestResourceStream(ResourceName = "ShardOS.Files.bmp.unknownapp.bmp")] public static byte[] rawUnknownApp;
-        [ManifestResourceStream(ResourceName = "ShardOS.Files.bmp.user24.bmp")] public static byte[] rawUser24;
-        [ManifestResourceStream(ResourceName = "ShardOS.Files.bmp.settings24.bmp")] public static byte[] rawSettings24;
+        [ManifestResourceStream(ResourceName = "ShardOS.Files.bmp.application.bmp")] public static byte[] rawUnknownApp;
+        [ManifestResourceStream(ResourceName = "ShardOS.Files.bmp.user.bmp")] public static byte[] rawUser;
+        [ManifestResourceStream(ResourceName = "ShardOS.Files.bmp.setting.bmp")] public static byte[] rawSetting;
         public static Bitmap ExitApp = new Bitmap(rawExit);
         public static Bitmap ServiceApp = new Bitmap(rawServiceApp);
         public static Bitmap SystemApp = new Bitmap(rawSystemApp);
         public static Bitmap UserApp = new Bitmap(rawUserApp);
         public static Bitmap UnknownApp = new Bitmap(rawUnknownApp);
-        public static Bitmap User24 = new Bitmap(rawUser24);
-        public static Bitmap Settings24 = new Bitmap(rawSettings24);
+        public static Bitmap User = new Bitmap(rawUser);
+        public static Bitmap Settings = new Bitmap(rawSetting);
+
+
+        [ManifestResourceStream(ResourceName = "ShardOS.Files.bmp.menu.bmp")] public static byte[] rawMenu;
+        public static Bitmap Menu = new Bitmap(rawMenu);
 
         [ManifestResourceStream(ResourceName = "ShardOS.Files.bmp.APP.bmp")] public static byte[] rawFileApp;
         [ManifestResourceStream(ResourceName = "ShardOS.Files.bmp.NONE.bmp")] public static byte[] rawFileNone;
         [ManifestResourceStream(ResourceName = "ShardOS.Files.bmp.REG.bmp")] public static byte[] rawFileReg;
         [ManifestResourceStream(ResourceName = "ShardOS.Files.bmp.TXT.bmp")] public static byte[] rawFileTxt;
-        [ManifestResourceStream(ResourceName = "ShardOS.Files.bmp.WIN.bmp")] public static byte[] rawWinApp;
+        [ManifestResourceStream(ResourceName = "ShardOS.Files.bmp.application.bmp")] public static byte[] rawWinApp;
 
         [ManifestResourceStream(ResourceName = "ShardOS.Files.ttf.Ubuntu.ttf")] public static byte[] rawFontUbuntu;
 
@@ -93,9 +97,9 @@ namespace ShardOS
             
             try
             {
-                DesktopGrid.gridItems.Add(new GridItem("Registry", new Bitmap(rawFileReg), 0, 0));
-                DesktopGrid.gridItems.Add(new GridItem("Browser", new Bitmap(rawWinApp), 1, 0));
-                DesktopGrid.gridItems.Add(new GridItem("Text file", new Bitmap(rawFileTxt), 0, 1));
+                DesktopGrid.gridItems.Add(new GridItem("App 1", new Bitmap(rawWinApp), 0, 0));
+                DesktopGrid.gridItems.Add(new GridItem("App 2", new Bitmap(rawWinApp), 1, 0));
+                DesktopGrid.gridItems.Add(new GridItem("App 3", new Bitmap(rawWinApp), 0, 1));
             }
             catch (Exception ex)
             {

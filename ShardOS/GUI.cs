@@ -27,8 +27,11 @@ namespace ShardOS
         public static CGSSurface surface;
         public static TTFFont font;
 
+        public static Color DarkS = Color.FromArgb(15, 15, 15);
         public static Color Dark = Color.FromArgb(30,30,30);
+        public static Color DarkM = Color.FromArgb(40, 40, 40);
         public static Color DarkL = Color.FromArgb(45, 45, 45);
+        public static Color DarkXL = Color.FromArgb(50, 50, 50);
 
         public static MouseState MouseState;
         public static MouseState prevMouseState;
@@ -37,7 +40,7 @@ namespace ShardOS
         static bool once = true;
         static int start = 0;
         static int fps = 0;
-        private static int FPS;
+        public static int FPS;
 
         public static void Init(int w, int h)
         {
@@ -126,30 +129,35 @@ namespace ShardOS
         public static int BottomTaskbarHeight = 42;
         public static void Draw()
         {
-            int X = 34;
+            int X = BottomTaskbarHeight + 2;
 
             Kernel.Canvas.DrawFilledRectangle(Desktop.Dark,0,(int)Kernel.Canvas.Mode.Height - BottomTaskbarHeight,(int)Kernel.Canvas.Mode.Width, BottomTaskbarHeight); // Bottom taskbar
 
             Kernel.Canvas.DrawFilledRectangle(Desktop.Dark, 0, 0, (int)Kernel.Canvas.Mode.Width, 24); // Top taskbar
-            Kernel.Canvas.DrawImageAlpha(Kernel.User24, 0, 0);
-            Kernel.Canvas.DrawImageAlpha(Kernel.Settings24, (int)(Kernel.Mode.Width - 24), 0);
+            Kernel.Canvas.DrawImage(Kernel.User, 0, 0,24,24);
+            Kernel.Canvas.DrawImage(Kernel.Settings, (int)(Kernel.Mode.Width - 24), 0,24,24);
             Desktop.DrawToSurface(Desktop.surface, 20, 24, -2, UAS.ActiveUser.Username, Color.GhostWhite);
             Desktop.DrawToSurface(Desktop.surface, 20,(int)(Kernel.Mode.Width - 86), -2, RTC.Hour + ":" + RTC.Minute, Color.White);
 
-            Kernel.Canvas.DrawImageAlpha(logo30,0,(int)Kernel.Canvas.Mode.Height - 30); // Start button
+            Kernel.Canvas.DrawImage(Kernel.logo512,0,(int)Kernel.Canvas.Mode.Height - BottomTaskbarHeight, BottomTaskbarHeight,BottomTaskbarHeight); // Start button
+
+            if(MouseEx.IsMouseWithin(0, (int)Kernel.Canvas.Mode.Height - BottomTaskbarHeight, (ushort)BottomTaskbarHeight, (ushort)BottomTaskbarHeight) && Desktop.MouseState == MouseState.Left && Desktop.prevMouseState != MouseState.Left)
+            {
+                Menu.Start();
+            }
 
             for (int j = 0; j < WindowManager.Windows.Count; j++) // Horrible app process... Dont look
             {
                 if (WindowManager.Selected == WindowManager.Windows[j].Title)
                 {
-                    Kernel.Canvas.DrawFilledRectangle(System.Drawing.Color.Gray, X - 3, (Int32)(Kernel.Canvas.Mode.Height - 30), 30, 30);
+                    Kernel.Canvas.DrawFilledRectangle(System.Drawing.Color.Gray, X, (Int32)(Kernel.Canvas.Mode.Height - BottomTaskbarHeight), BottomTaskbarHeight, BottomTaskbarHeight);
                 }
-                Kernel.Canvas.DrawImageAlpha(WindowManager.Windows[j].Icon, X - 1, (int)(Kernel.Canvas.Mode.Height - 28));
-                if (MouseEx.IsMouseWithin(X, (int)(Kernel.Canvas.Mode.Height - 30), 30, 30) && MouseManager.MouseState == MouseState.Left && Desktop.prevMouseState != MouseState.Left)
+                Kernel.Canvas.DrawImage(WindowManager.Windows[j].Icon, X + 2, (int)(Kernel.Canvas.Mode.Height - BottomTaskbarHeight + 2),BottomTaskbarHeight - 4,BottomTaskbarHeight - 4);
+                if (MouseEx.IsMouseWithin(X, (int)(Kernel.Canvas.Mode.Height - BottomTaskbarHeight), (ushort)BottomTaskbarHeight, (ushort)BottomTaskbarHeight) && MouseManager.MouseState == MouseState.Left && Desktop.prevMouseState != MouseState.Left)
                 {
                     WindowManager.Selected = WindowManager.Windows[j].Title;
                 }
-                X = X + 30;
+                X = X + BottomTaskbarHeight;
             }
         }
     }
@@ -157,15 +165,17 @@ namespace ShardOS
     public class DesktopGrid
     {
         public static List<GridItem> gridItems = new List<GridItem>();
+        public static int offset = 3;
+        public static int UPoffset = 48;
         //public static string[] Files;
         public static void Draw()
         {
             //One item 86x86
             for (int item = 0; item < gridItems.Count; item++)
             {
-                //Kernel.Canvas.DrawRectangle(Color.Azure, gridItems[item].x * 86, gridItems[item].y * 86, 86, 86);
-                Kernel.Canvas.DrawImageAlpha(gridItems[item].image, gridItems[item].x * 86 + 11, gridItems[item].y * 86 + 32);
-                Desktop.DrawToSurface(Desktop.surface, 14, gridItems[item].x * 86 + (43 - ((gridItems[item].Title.Length / 2) * 8)), gridItems[item].y * 86 + 64 + 32, gridItems[item].Title.ToString(), Color.WhiteSmoke);
+                //Kernel.Canvas.DrawRectangle(Color.Azure, gridItems[item].x * 48, gridItems[item].y * 64 + UPoffset, 48, 64);
+                Kernel.Canvas.DrawImage(gridItems[item].image, gridItems[item].x * 48 + offset, gridItems[item].y * 64 + UPoffset + offset,48 - offset*2,48 - offset*2);
+                Desktop.DrawToSurface(Desktop.surface, 14, gridItems[item].x * 48 + (24 - ((gridItems[item].Title.Length / 2) * 8)), gridItems[item].y * 64 + UPoffset + 48, gridItems[item].Title.ToString(), Color.WhiteSmoke);
             }
         }
     }
