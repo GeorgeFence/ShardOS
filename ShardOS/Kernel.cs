@@ -1,4 +1,5 @@
-﻿using Cosmos.HAL;
+﻿using Cosmos.Core;
+using Cosmos.HAL;
 using Cosmos.System;
 using Cosmos.System.Graphics;
 using Cosmos.System.Graphics.Fonts;
@@ -40,24 +41,25 @@ namespace ShardOS
         [ManifestResourceStream(ResourceName = "ShardOS.Files.bmp.userapp.bmp")] public static byte[] rawUserApp;
         [ManifestResourceStream(ResourceName = "ShardOS.Files.bmp.application.bmp")] public static byte[] rawUnknownApp;
         [ManifestResourceStream(ResourceName = "ShardOS.Files.bmp.user.bmp")] public static byte[] rawUser;
-        [ManifestResourceStream(ResourceName = "ShardOS.Files.bmp.setting.bmp")] public static byte[] rawSetting;
         public static Bitmap ExitApp = new Bitmap(rawExit);
         public static Bitmap ServiceApp = new Bitmap(rawServiceApp);
         public static Bitmap SystemApp = new Bitmap(rawSystemApp);
         public static Bitmap UserApp = new Bitmap(rawUserApp);
         public static Bitmap UnknownApp = new Bitmap(rawUnknownApp);
         public static Bitmap User = new Bitmap(rawUser);
+
+        [ManifestResourceStream(ResourceName = "ShardOS.Files.bmp.setting.bmp")] public static byte[] rawSetting;
         public static Bitmap Settings = new Bitmap(rawSetting);
+        [ManifestResourceStream(ResourceName = "ShardOS.Files.bmp.control.bmp")] public static byte[] rawControl;
+        public static Bitmap Control = new Bitmap(rawControl);
+        [ManifestResourceStream(ResourceName = "ShardOS.Files.bmp.power.bmp")] public static byte[] rawPower;
+        public static Bitmap PowerShutdown = new Bitmap(rawPower);
 
 
         [ManifestResourceStream(ResourceName = "ShardOS.Files.bmp.menu.bmp")] public static byte[] rawMenu;
         public static Bitmap Menu = new Bitmap(rawMenu);
 
-        [ManifestResourceStream(ResourceName = "ShardOS.Files.bmp.APP.bmp")] public static byte[] rawFileApp;
-        [ManifestResourceStream(ResourceName = "ShardOS.Files.bmp.NONE.bmp")] public static byte[] rawFileNone;
-        [ManifestResourceStream(ResourceName = "ShardOS.Files.bmp.REG.bmp")] public static byte[] rawFileReg;
-        [ManifestResourceStream(ResourceName = "ShardOS.Files.bmp.TXT.bmp")] public static byte[] rawFileTxt;
-        [ManifestResourceStream(ResourceName = "ShardOS.Files.bmp.application.bmp")] public static byte[] rawWinApp;
+
 
         [ManifestResourceStream(ResourceName = "ShardOS.Files.ttf.Ubuntu.ttf")] public static byte[] rawFontUbuntu;
 
@@ -97,9 +99,9 @@ namespace ShardOS
             
             try
             {
-                DesktopGrid.gridItems.Add(new GridItem("App 1", new Bitmap(rawWinApp), 0, 0));
-                DesktopGrid.gridItems.Add(new GridItem("App 2", new Bitmap(rawWinApp), 1, 0));
-                DesktopGrid.gridItems.Add(new GridItem("App 3", new Bitmap(rawWinApp), 0, 1));
+                DesktopGrid.gridItems.Add(new GridItem("App 1", UnknownApp, 0, 0));
+                DesktopGrid.gridItems.Add(new GridItem("App 2", UnknownApp, 1, 0));
+                DesktopGrid.gridItems.Add(new GridItem("App 3", UnknownApp, 0, 1));
             }
             catch (Exception ex)
             {
@@ -175,10 +177,22 @@ namespace ShardOS
         {
             if(mode == 0)
             {
+                Desktop.CanContinue = false;
+                Canvas = FullScreenCanvas.GetFullScreenCanvas(Mode);
+                Canvas.DrawImageAlpha(logo512, (int)(Mode.Width / 2 - 256), (int)(Mode.Height / 5));
+                Canvas.Display();
+                DrawStatusForce("Shutting down");
+                DelayCode(1500);
                 Power.ACPIShutdown();
             }
             else if(mode == 1)
             {
+                Desktop.CanContinue = false;
+                Canvas = FullScreenCanvas.GetFullScreenCanvas(Mode);
+                Canvas.DrawImageAlpha(logo512, (int)(Mode.Width / 2 - 256), (int)(Mode.Height / 5));
+                Canvas.Display();
+                DrawStatusForce("Restarting");
+                DelayCode(1500);
                 Power.CPUReboot();
             }
             else if(mode == 2)

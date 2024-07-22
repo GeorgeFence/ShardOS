@@ -12,6 +12,7 @@ using System.Threading.Tasks;
 using System.Threading;
 using System.Drawing;
 using Cosmos.System.Graphics;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace ShardOS.Apps
 {
@@ -55,7 +56,15 @@ namespace ShardOS.Apps
             }
 
             Label.Text = "Welcome back " + UserName + "!";
-            if (ButtonLogin.IsClicked)
+            bool con2 = false;
+            if (KeyboardEx.IsKeyPressed)
+            {
+                if (KeyboardEx.k.Key == ConsoleKey.Enter)
+                {
+                    con2 = true;
+                }
+            }
+            if (ButtonLogin.IsClicked || con2)
             {
                 foreach (User us in UAS.Users)
                 {

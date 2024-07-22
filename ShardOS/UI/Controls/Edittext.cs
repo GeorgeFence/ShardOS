@@ -61,7 +61,7 @@ namespace ShardOS.UI.Controls
                 {
                     Text = Text.Substring(0, Text.Length - 1);
                 }
-                else
+                else if(KeyboardEx.k.Key != ConsoleKey.Enter)
                 {
                     Text += KeyboardEx.k.KeyChar.ToString();
                 }

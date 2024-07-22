@@ -36,11 +36,16 @@ namespace ShardOS
         public static MouseState MouseState;
         public static MouseState prevMouseState;
 
-        private static int Count = 0;
-        static bool once = true;
-        static int start = 0;
-        static int fps = 0;
+        public static bool once = true;
+        public static int start;
+        public static int Count;
         public static int FPS;
+
+        public static int MouseX = 0;
+        public static int MouseY = 0;
+
+        public static bool CanContinue = false;
+        public static bool OnlyWindowsMouse = false;
 
         public static void Init(int w, int h)
         {
@@ -48,6 +53,7 @@ namespace ShardOS
             MouseManager.ScreenHeight = (uint)h;
             surface = new CGSSurface(Kernel.Canvas);
             font = new TTFFont(Kernel.rawFontUbuntu);
+            CanContinue = true;
             Welcome.Start();
         }
 
@@ -55,32 +61,47 @@ namespace ShardOS
         {
             try
             {
-                if (once) { start = Cosmos.HAL.RTC.Hour * 3600 + Cosmos.HAL.RTC.Minute * 60 + Cosmos.HAL.RTC.Second + 1; once = false; }
-                if (start == ((Cosmos.HAL.RTC.Hour * 3600 + Cosmos.HAL.RTC.Minute * 60 + Cosmos.HAL.RTC.Second))) { once = true; fps = Count; FPS = fps; Count = 0; }
+                if (CanContinue)
+                {
+                    if (MouseManager.X != MouseX)
+                    {
+                        MouseX = (int)MouseManager.X;
+                    }
+                    if (MouseManager.Y != MouseY)
+                    {
+                        MouseY = (int)MouseManager.Y;
+                    }
 
-                if (UAS.ActiveUser.Username != "defaultUser")
-                {
-                    Kernel.Canvas.DrawImage(wallpaper, 0, 0);
-                    Taskbar.Draw();
-                    DesktopGrid.Draw();
-                    WindowManager.Update(Kernel.Canvas);
-                    DrawToSurface(surface, 14, 0, 24, FPS.ToString(), Color.Green);
-                    Kernel.Canvas.DrawImageAlpha(cursor, (int)MouseManager.X, (int)MouseManager.Y);
-                    Kernel.Canvas.Display();
-                }
-                else
-                {
-                    LogonUI.Draw();
-                }
+                    if (once) { start = Cosmos.HAL.RTC.Hour * 3600 + Cosmos.HAL.RTC.Minute * 60 + Cosmos.HAL.RTC.Second + 1; once = false; }
+                    if (start == ((Cosmos.HAL.RTC.Hour * 3600 + Cosmos.HAL.RTC.Minute * 60 + Cosmos.HAL.RTC.Second))) { once = true; FPS = Count; Count = 0; }
 
-                if (Frames == 4)
-                {
-                    Heap.Collect();
-                    Frames = 0;
+                    if (UAS.ActiveUser.Username != "defaultUser")
+                    {
+                        Kernel.Canvas.DrawImage(wallpaper, 0, 0);
+                        if (OnlyWindowsMouse==false)
+                        {
+                            Taskbar.Draw();
+                            DesktopGrid.Draw();
+                        }
+                        WindowManager.Update(Kernel.Canvas);
+                        //DrawToSurface(surface, 14, 0, 24, FPS.ToString(), Color.Green);
+                        Kernel.Canvas.DrawImageAlpha(cursor, MouseX, MouseY);
+                        Kernel.Canvas.Display();
+                    }
+                    else
+                    {
+                        LogonUI.Draw();
+                    }
+
+                    if (Frames == 20)
+                    {
+                        Heap.Collect();
+                        Frames = 0;
+                    }
+                    Frames++;
+                    Count++;
+                    prevMouseState = MouseManager.MouseState;
                 }
-                Frames++;
-                Count++;
-                prevMouseState = MouseManager.MouseState;
             }
             catch (Exception ex)
             {
@@ -88,6 +109,26 @@ namespace ShardOS
                 Thread.Sleep(5000);
             }
 
+        }
+        public static int RgbaToHex(int red, int green, int blue, int alpha)
+        {
+            // Ensure the values are within the valid range
+            red = Math.Clamp(red, 0, 255);
+            green = Math.Clamp(green, 0, 255);
+            blue = Math.Clamp(blue, 0, 255);
+            alpha = Math.Clamp(alpha, 0, 255);
+
+            // Combine the values into a single integer
+            int hex = (alpha << 24) | (red << 16) | (green << 8) | blue;
+            return hex;
+        }
+        public static (int red, int green, int blue, int alpha) HexToRgba(int hex)
+        {
+            int alpha = (hex >> 24) & 0xFF;
+            int red = (hex >> 16) & 0xFF;
+            int green = (hex >> 8) & 0xFF;
+            int blue = hex & 0xFF;
+            return (red, green, blue, alpha);
         }
 
         public static void DrawImageAlpha(Cosmos.System.Graphics.Image image, int x, int y)
@@ -135,7 +176,7 @@ namespace ShardOS
 
             Kernel.Canvas.DrawFilledRectangle(Desktop.Dark, 0, 0, (int)Kernel.Canvas.Mode.Width, 24); // Top taskbar
             Kernel.Canvas.DrawImage(Kernel.User, 0, 0,24,24);
-            Kernel.Canvas.DrawImage(Kernel.Settings, (int)(Kernel.Mode.Width - 24), 0,24,24);
+            Kernel.Canvas.DrawImage(Kernel.Control, (int)(Kernel.Mode.Width - 26), 0,24,24);
             Desktop.DrawToSurface(Desktop.surface, 20, 24, -2, UAS.ActiveUser.Username, Color.GhostWhite);
             Desktop.DrawToSurface(Desktop.surface, 20,(int)(Kernel.Mode.Width - 86), -2, RTC.Hour + ":" + RTC.Minute, Color.White);
 

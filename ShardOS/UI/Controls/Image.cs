@@ -16,18 +16,23 @@ namespace ShardOS.UI.Controls
     {
         internal string InternalContents;
 
-        public static Bitmap image;
+        public Bitmap image;
 
         public bool IsClicked = false;
+
+        public int W;
+        public int H;
 
         public int Xpos;
         public int Ypos;
         public bool Alpha = false;
         public string Text = "";
 
-        public Image(int X, int Y, Bitmap img, bool alpha, string title = "")
+        public Image(int X, int Y,int W,int H, Bitmap img, bool alpha, string title = "")
             : base(X, Y, 0, 0)
         {
+            this.W = W;
+            this.H = H;
             this.Xpos = X;
             this.Ypos = Y;
             image = img;
@@ -43,7 +48,7 @@ namespace ShardOS.UI.Controls
             }
             else
             {
-                Kernel.Canvas.DrawImage(image, X + Xpos, Y + Ypos);
+                Kernel.Canvas.DrawImage(image, X + Xpos, Y + Ypos, W, H);
             }
 
             if (MouseEx.IsMouseWithin(X + Xpos, Y + Ypos, (ushort)image.Width, (ushort)image.Height))
