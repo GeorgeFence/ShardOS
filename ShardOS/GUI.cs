@@ -33,7 +33,6 @@ namespace ShardOS
         public static Color DarkL = Color.FromArgb(45, 45, 45);
         public static Color DarkXL = Color.FromArgb(50, 50, 50);
 
-        public static MouseState MouseState;
         public static MouseState prevMouseState;
 
         public static bool once = true;
@@ -182,7 +181,7 @@ namespace ShardOS
 
             Kernel.Canvas.DrawImage(Kernel.logo512,0,(int)Kernel.Canvas.Mode.Height - BottomTaskbarHeight, BottomTaskbarHeight,BottomTaskbarHeight); // Start button
 
-            if(MouseEx.IsMouseWithin(0, (int)Kernel.Canvas.Mode.Height - BottomTaskbarHeight, (ushort)BottomTaskbarHeight, (ushort)BottomTaskbarHeight) && Desktop.MouseState == MouseState.Left && Desktop.prevMouseState != MouseState.Left)
+            if(MouseEx.IsMouseWithin(0, (int)Kernel.Canvas.Mode.Height - BottomTaskbarHeight, (ushort)BottomTaskbarHeight, (ushort)BottomTaskbarHeight) && MouseManager.MouseState == MouseState.Left && Desktop.prevMouseState != MouseState.Left)
             {
                 Menu.Start();
             }

@@ -116,18 +116,13 @@ namespace ShardOS
             //Keyboard Input
             KeyboardEx.k = new ConsoleKeyInfo();
             KeyboardEx.IsKeyPressed = false;
-            PS2Keyboard.WaitForKey();
-            while (Console.KeyAvailable)
+            //PS2Keyboard.WaitForKey(); Halts CPU, waits until HW update
+            if (KeyboardManager.TryReadKey(out var key))
             {
-                KeyboardEx.k = Console.ReadKey(true);
+                KeyboardEx.k = new ConsoleKeyInfo(key.KeyChar, key.Key.ToConsoleKey()
+                , key.Modifiers == ConsoleModifiers.Shift, key.Modifiers == ConsoleModifiers.Alt
+                , key.Modifiers == ConsoleModifiers.Control);
                 KeyboardEx.IsKeyPressed = true;
-            }
-
-            //Mouse Input
-            Desktop.MouseState = MouseState.None;
-            if(MouseManager.MouseState != MouseState.None)
-            {
-                Desktop.MouseState = MouseManager.MouseState;
             }
 
             //Gui

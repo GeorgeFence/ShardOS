@@ -44,7 +44,7 @@ namespace ShardOS.UI.Controls
             Canvas.DrawRectangle(System.Drawing.Color.Black, Xpos + X, Ypos + Y, W, H);
             if (MouseEx.IsMouseWithin(Xpos + X, Ypos + Y, (ushort)W,(ushort)H))
             {
-                if(Desktop.MouseState == MouseState.Left && Desktop.prevMouseState != MouseState.Left)
+                if(MouseManager.MouseState == MouseState.Left && Desktop.prevMouseState != MouseState.Left)
                 {
                     Selected = true;
                 }
