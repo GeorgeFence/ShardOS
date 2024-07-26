@@ -51,7 +51,7 @@ namespace ShardOS.UI.Controls
                 Kernel.Canvas.DrawImage(image, X + Xpos, Y + Ypos, W, H);
             }
 
-            if (MouseEx.IsMouseWithin(X + Xpos, Y + Ypos, (ushort)image.Width, (ushort)image.Height))
+            if (MouseEx.IsMouseWithin(X + Xpos, Y + Ypos, (ushort)W,(ushort)H))
             {
                 if(Text != "")
                 {

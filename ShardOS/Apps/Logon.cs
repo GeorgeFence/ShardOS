@@ -24,6 +24,8 @@ namespace ShardOS.Apps
         public static Panel panel = null!;
         public static Window window;
 
+        public static Bitmap wallpaper = new Bitmap(Kernel.rawWallpaper);
+
         public static string UserName = "";
 
         public static int I = 0;
@@ -91,7 +93,7 @@ namespace ShardOS.Apps
         {
             WindowManager.StopAll();
             window = new Window(0,0,(ushort)Kernel.Canvas.Mode.Width,(ushort)Kernel.Canvas.Mode.Height, "LogonUI", Update, DesignType.LUI, PermissionsType.User, Kernel.UnknownApp);
-            window.backgroundimage = Desktop.wallpaper;
+            window.backgroundimage = wallpaper;
             panel = new Panel(window.PanelW/2 - 160, window.PanelH/2 - 120, 320, 240, Desktop.Dark);
             Label = new Label(panel.X + 5, panel.Y + 5, 8, "Welcome back " + UserName + "!");
             Label.fg = Color.White;

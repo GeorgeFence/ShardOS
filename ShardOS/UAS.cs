@@ -12,6 +12,7 @@ namespace ShardOS
     {
         public static List<User> Users = new List<User>();
         public static User ActiveUser = new User("defaultUser","default","0:\\Users\\defaultUser");
+        public static User defaultuser = new User("defaultUser", "default", "0:\\Users\\defaultUser");
         public static void Initialize()
         {
             if (!Files.FileExists("0:\\users.reg"))
@@ -139,6 +140,12 @@ namespace ShardOS
         public static void SetUserActive(User user)
         {
             ActiveUser = user;
+        }
+        public static void Logout()
+        {
+            ActiveUser = defaultuser;
+            DesktopGrid.gridItems.Clear();
+            Kernel.DrawStatusForce("Logout Successfull", Color.Green);
         }
     }
 
