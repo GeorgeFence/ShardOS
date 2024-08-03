@@ -145,7 +145,36 @@ namespace ShardOS
         {
             ActiveUser = defaultuser;
             DesktopGrid.gridItems.Clear();
+            Shell.Init(0, 0, (int)Kernel.Canvas.Mode.Width, (int)Kernel.Canvas.Mode.Height);
             Kernel.DrawStatusForce("Logout Successfull", Color.Green);
+            bool once = true;
+            while(ActiveUser == defaultuser)
+            {
+                Shell.Update();
+                Shell.Draw(0,0);
+                if (once)
+                {
+                    once = false;
+                    ShellConsole.WriteLine("Logouting in 5");
+                    Shell.Draw(0, 0);
+                    Kernel.DelayCode(1000);
+                    ShellConsole.WriteLine("4");
+                    Shell.Draw(0, 0);
+                    Kernel.DelayCode(1000);
+                    ShellConsole.WriteLine("3", Color.Red);
+                    Shell.Draw(0, 0);
+                    Kernel.DelayCode(1000);
+                    ShellConsole.WriteLine("2", Color.Red);
+                    Shell.Draw(0, 0);
+                    Kernel.DelayCode(1000);
+                    ShellConsole.WriteLine("1", Color.Red);
+                    Shell.Draw(0, 0);
+                    Kernel.DelayCode(1000);
+                    ShellConsole.WriteLine("0", Color.Red);
+                    Shell.Draw(0, 0);
+                    Kernel.DelayCode(200);
+                }
+            }
         }
     }
 

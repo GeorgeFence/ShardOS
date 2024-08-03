@@ -77,6 +77,7 @@ namespace ShardOS.Apps
                             UAS.ActiveUser = us;
                             Stop();
                             Welcome.Start();
+                            ShellApp.Start();
                         }
                         else
                         {

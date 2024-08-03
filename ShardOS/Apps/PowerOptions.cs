@@ -45,7 +45,7 @@ namespace ShardOS.Apps
             }
             if (LogoutButton.IsClicked)
             {
-                Stop();
+                WindowManager.Stop(Swindow);
                 UAS.Logout();
             }
         }
