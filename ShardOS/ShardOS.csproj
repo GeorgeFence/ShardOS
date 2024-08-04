@@ -31,6 +31,7 @@
       <None Remove="Files\bmp\application.bmp" />
       <None Remove="Files\bmp\control.bmp" />
       <None Remove="Files\bmp\cursor.bmp" />
+      <None Remove="Files\bmp\error.bmp" />
       <None Remove="Files\bmp\exit.bmp" />
       <None Remove="Files\bmp\logo.bmp" />
       <None Remove="Files\bmp\logo30.bmp" />
@@ -54,6 +55,7 @@
       <EmbeddedResource Include="Files\bmp\application.bmp" />
       <EmbeddedResource Include="Files\bmp\control.bmp" />
       <EmbeddedResource Include="Files\bmp\cursor.bmp" />
+      <EmbeddedResource Include="Files\bmp\error.bmp" />
       <EmbeddedResource Include="Files\bmp\exit.bmp" />
       <EmbeddedResource Include="Files\bmp\logo.bmp" />
       <EmbeddedResource Include="Files\bmp\logo30.bmp" />

@@ -14,8 +14,8 @@ namespace ShardOS.Commands.FileSystem
     {
         public Dir()
         {
-            this.Name = "dir";
-            this.Help = "show files and folders in current directory";
+            Name = "dir";
+            Help = "show files and folders in current directory";
 
         }
 

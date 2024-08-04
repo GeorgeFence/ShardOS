@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ShardOS.Apps;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
@@ -144,37 +145,35 @@ namespace ShardOS
         public static void Logout()
         {
             ActiveUser = defaultuser;
-            DesktopGrid.gridItems.Clear();
             Shell.Init(0, 0, (int)Kernel.Canvas.Mode.Width, (int)Kernel.Canvas.Mode.Height);
+
+            ShellConsole.WriteLine("Logout in 5");
+            Shell.Draw(0, 0);
+            Kernel.DelayCode(1000);
+            ShellConsole.WriteLine("4");
+            Shell.Draw(0, 0);
+            Kernel.DelayCode(1000);
+            ShellConsole.WriteLine("3", Color.Red);
+            Shell.Draw(0, 0);
+            Kernel.DelayCode(1000);
+            ShellConsole.WriteLine("2", Color.Red);
+            Shell.Draw(0, 0);
+            Kernel.DelayCode(1000);
+            ShellConsole.WriteLine("1", Color.Red);
+            Shell.Draw(0, 0);
+            Kernel.DelayCode(1000);
+            ShellConsole.WriteLine("0", Color.Red);
+            Shell.Draw(0, 0);
+            Kernel.DelayCode(500);
+
+            DesktopGrid.gridItems.Clear();
+            WindowManager.StopAll();
+
             Kernel.DrawStatusForce("Logout Successfull", Color.Green);
-            bool once = true;
-            while(ActiveUser == defaultuser)
-            {
-                Shell.Update();
-                Shell.Draw(0,0);
-                if (once)
-                {
-                    once = false;
-                    ShellConsole.WriteLine("Logouting in 5");
-                    Shell.Draw(0, 0);
-                    Kernel.DelayCode(1000);
-                    ShellConsole.WriteLine("4");
-                    Shell.Draw(0, 0);
-                    Kernel.DelayCode(1000);
-                    ShellConsole.WriteLine("3", Color.Red);
-                    Shell.Draw(0, 0);
-                    Kernel.DelayCode(1000);
-                    ShellConsole.WriteLine("2", Color.Red);
-                    Shell.Draw(0, 0);
-                    Kernel.DelayCode(1000);
-                    ShellConsole.WriteLine("1", Color.Red);
-                    Shell.Draw(0, 0);
-                    Kernel.DelayCode(1000);
-                    ShellConsole.WriteLine("0", Color.Red);
-                    Shell.Draw(0, 0);
-                    Kernel.DelayCode(200);
-                }
-            }
+
+            Desktop.CanContinue = true;
+            Desktop.OnlyWindowsMouse = false;
+            Logon.Start();
         }
     }
 

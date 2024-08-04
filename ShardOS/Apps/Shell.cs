@@ -43,7 +43,7 @@ namespace ShardOS.Apps
 
         public static void Stop()
         {
-            WindowManager.StopAll();
+            WindowManager.Stop(window);
         }
     }
 }

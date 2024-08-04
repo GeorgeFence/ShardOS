@@ -76,7 +76,7 @@ namespace ShardOS.Apps
                         {
                             UAS.ActiveUser = us;
                             Stop();
-                            Welcome.Start();
+                            //Welcome.Start();
                             ShellApp.Start();
                         }
                         else
@@ -101,6 +101,7 @@ namespace ShardOS.Apps
             edittext = new Edittext(panel.X + 5, panel.Y + 22, 310, 20);
             edittext.fg = Color.White;
             edittext.bg = Desktop.DarkL;
+            edittext.Selected = true;
             ButtonLogin = new Button(panel.X + panel.Widt - 37, panel.Y + panel.Heig - 21, 32, 16, 0, "OK", true, Desktop.Dark,Desktop.DarkL, System.Drawing.Color.White, Color.Black);
             window.Controls.Add(panel);
             window.Controls.Add(Label);

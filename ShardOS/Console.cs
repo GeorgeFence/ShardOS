@@ -36,6 +36,7 @@ namespace ShardOS
             ASC16.DrawStringShellEngine(TopText, Color.White, (ShellEngine.shell.Width / 2) - (uint)((TopText.Length / 2) * 8), 2);
             ShellConsole.Init(w, h);
             ShellConsole.DrawInput();
+            AddCommands();
         }
         public static void AddCommands()
         {
@@ -71,7 +72,6 @@ namespace ShardOS
                         ShellConsole.WriteLine("");
                         ProcessInput(Text);
                         Text = "";
-                        ShellConsole.WriteLine("");
                         ShellConsole.DrawInput();
                     }
                 }
@@ -90,17 +90,19 @@ namespace ShardOS
                     {
                         try
                         {
+
                             // validate command
                             if (args[0].ToLower() == c.Name)
                             {
                                 // execute and finish
                                 c.Execute(line, args);
-                                ShellConsole.WriteLine("");
                                 error = false;
                             }
                         }
                         catch (Exception ex)
                         {
+                            Kernel.DrawStatusForce("Shell: " + ex.Message);
+                            Kernel.DelayCode(2000);
                         }
                     }
                     // invalid command has been entered
@@ -113,7 +115,8 @@ namespace ShardOS
             }
             catch (Exception ex)
             {
-
+                Kernel.DrawStatusForce("Shell: " + ex.Message);
+                Kernel.DelayCode(2000);
             }
         }
         public static void Draw(int x, int y)

@@ -8,9 +8,11 @@ using ShardOS.Apps;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Data;
 using System.Drawing;
 using System.Reflection;
 using System.Text;
+using System.Threading.Tasks.Dataflow;
 using static System.Net.Mime.MediaTypeNames;
 using Console = System.Console;
 using Power = Cosmos.HAL.Power;
@@ -54,6 +56,8 @@ namespace ShardOS
         public static Bitmap Control = new Bitmap(rawControl);
         [ManifestResourceStream(ResourceName = "ShardOS.Files.bmp.power.bmp")] public static byte[] rawPower;
         public static Bitmap PowerShutdown = new Bitmap(rawPower);
+        [ManifestResourceStream(ResourceName = "ShardOS.Files.bmp.error.bmp")] public static byte[] rawError;
+        public static Bitmap Error = new Bitmap(rawError);
 
 
         [ManifestResourceStream(ResourceName = "ShardOS.Files.bmp.menu.bmp")] public static byte[] rawMenu;
@@ -90,7 +94,7 @@ namespace ShardOS
             RegistryManager.Initialize();
             DrawStatus("Initializing UAS");
             UAS.Initialize();
-            DelayCode(500); 
+            DelayCode(500);
             DrawStatus("Initializing GUI");
             Desktop.Init((int)Mode.Width,(int)Mode.Height);
             DelayCode(500);
@@ -113,20 +117,48 @@ namespace ShardOS
 
         protected override void Run()
         {
-            //Keyboard Input
-            KeyboardEx.k = new ConsoleKeyInfo();
-            KeyboardEx.IsKeyPressed = false;
-            //PS2Keyboard.WaitForKey(); Halts CPU, waits until HW update
-            if (KeyboardManager.TryReadKey(out var key))
+            try
             {
-                KeyboardEx.k = new ConsoleKeyInfo(key.KeyChar, key.Key.ToConsoleKey()
-                , key.Modifiers == ConsoleModifiers.Shift, key.Modifiers == ConsoleModifiers.Alt
-                , key.Modifiers == ConsoleModifiers.Control);
-                KeyboardEx.IsKeyPressed = true;
-            }
+                throw new Exception();
+                //Keyboard Input
+                KeyboardEx.k = new ConsoleKeyInfo();
+                KeyboardEx.IsKeyPressed = false;
+                //PS2Keyboard.WaitForKey(); Halts CPU, waits until HW update
+                if (KeyboardManager.TryReadKey(out var key))
+                {
+                    KeyboardEx.k = new ConsoleKeyInfo(key.KeyChar, key.Key.ToConsoleKey()
+                    , key.Modifiers == ConsoleModifiers.Shift, key.Modifiers == ConsoleModifiers.Alt
+                    , key.Modifiers == ConsoleModifiers.Control);
+                    KeyboardEx.IsKeyPressed = true;
+                }
 
-            //Gui
-            Desktop.Update();
+                //Gui
+                Desktop.Update();
+            }
+            catch(Exception ex)
+            {
+                KernelPanic(ex.Message);
+            }
+        }
+
+        public static void KernelPanic(string message)
+        {
+            // Clear the screen with a background color
+            Canvas.Clear(Color.DarkBlue);
+
+            Canvas.DrawImage(Error, (int)(Mode.Width / 2 - 128), (int)(Mode.Height / 5), 256,256);
+
+            // Draw the kernel panic message
+            Canvas.DrawString("KERNEL PANIC", PCScreenFont.Default, Color.Red, 20, 20);
+            Canvas.DrawString("==============", PCScreenFont.Default, Color.White, 20, 50);
+            Canvas.DrawString("A fatal error has occurred, and the system has halted.", PCScreenFont.Default, Color.White, 20, 80);
+            Canvas.DrawString("Error Details:", PCScreenFont.Default, Color.White, 20, 110);
+            Canvas.DrawString(message, PCScreenFont.Default, Color.White, 20, 140); ;
+            Canvas.DrawString("Please restart your computer.", PCScreenFont.Default, Color.White, 20, 170);
+
+            Canvas.Display();
+            // Halt the CPU
+            CPU.Halt();
         }
 
         public static void DelayCode(uint milliseconds)

@@ -20,6 +20,7 @@ namespace ShardOS.Apps
         public static Button ShutdownButton = null!;
         public static Button RebootButton = null!;
         public static Button LogoutButton = null!;
+        public static Button ShellButton = null!;
         public static Window Swindow;
 
         public static Bitmap OldWallpaper;
@@ -48,6 +49,16 @@ namespace ShardOS.Apps
                 WindowManager.Stop(Swindow);
                 UAS.Logout();
             }
+            if(ShellButton.IsClicked)
+            {
+
+                Desktop.wallpaper = OldWallpaper;
+                Kernel.DrawStatusForce("Stopping Applications", Color.Red);
+                WindowManager.StopAll();
+                DesktopGrid.gridItems.Clear();
+                Shell.Init(0, 0, (int)Kernel.Canvas.Mode.Width, (int)Kernel.Canvas.Mode.Height);
+                Desktop.IsShell = true;
+            }
         }
 
         public static void Start()
@@ -65,11 +76,13 @@ namespace ShardOS.Apps
             Swindow = new Window((int)(Kernel.Canvas.Mode.Width / 2 - 150), (int)(Kernel.Canvas.Mode.Height / 2 - 64), 348, 128, "Power Options", Update, DesignType.Blank,PermissionsType.Service, Kernel.PowerShutdown);
             Swindow.CanMove = false;
             ShutdownButton = new Button(0, 0, (ushort)Swindow.PanelW, (ushort)(Swindow.PanelH / 3), 0, "SHUTDOWN", true, Desktop.Dark, Desktop.DarkL, System.Drawing.Color.DarkGray, Desktop.DarkS);
-            RebootButton = new Button(0, (ushort)(Swindow.PanelH / 3), (ushort)Swindow.PanelW, (ushort)(Swindow.PanelH / 3), 0, "REBOOT", true, Desktop.Dark, Desktop.DarkL, System.Drawing.Color.DarkGray, Desktop.DarkS);
-            LogoutButton = new Button(0, (ushort)(Swindow.PanelH / 3 * 2), (ushort)Swindow.PanelW, (ushort)(Swindow.PanelH / 3), 0, "LOGOUT", true, Desktop.Dark, Desktop.DarkL, System.Drawing.Color.DarkGray, Desktop.DarkS);
+            RebootButton = new Button(0, (ushort)(Swindow.PanelH / 3) + 1, (ushort)Swindow.PanelW, (ushort)(Swindow.PanelH / 3), 0, "REBOOT", true, Desktop.Dark, Desktop.DarkL, System.Drawing.Color.DarkGray, Desktop.DarkS);
+            LogoutButton = new Button(0, (ushort)(Swindow.PanelH / 3 * 2) + 2, (ushort)(Swindow.PanelW / 2), (ushort)(Swindow.PanelH / 3), 0, "LOGOUT", true, Desktop.Dark, Desktop.DarkL, System.Drawing.Color.DarkGray, Desktop.DarkS);
+            ShellButton = new Button((ushort)(Swindow.PanelW / 2), (ushort)(Swindow.PanelH / 3 * 2) + 2, (ushort)(Swindow.PanelW / 2), (ushort)(Swindow.PanelH / 3), 0, "Shell", true, Desktop.Dark, Desktop.DarkL, System.Drawing.Color.DarkGray, Desktop.DarkS);
             Swindow.Controls.Add(ShutdownButton);
             Swindow.Controls.Add(RebootButton);
             Swindow.Controls.Add(LogoutButton);
+            Swindow.Controls.Add(ShellButton);
             WindowManager.Add(Swindow);
             Desktop.OnlyWindowsMouse = true;
             Desktop.wallpaper = b;
