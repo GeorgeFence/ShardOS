@@ -18,7 +18,7 @@ namespace ShardOS.UI.Controls
         public int Ypos;
         public int Px;
 
-        public Color fg = Color.Black;
+        public Color fg = Color.White;
 
 
         public Label(int X, int Y, int Px, string Contents)

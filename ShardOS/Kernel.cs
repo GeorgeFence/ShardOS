@@ -1,4 +1,5 @@
 ﻿using Cosmos.Core;
+using Cosmos.Core.Memory;
 using Cosmos.HAL;
 using Cosmos.System;
 using Cosmos.System.Graphics;
@@ -66,6 +67,7 @@ namespace ShardOS
 
 
         [ManifestResourceStream(ResourceName = "ShardOS.Files.ttf.Ubuntu.ttf")] public static byte[] rawFontUbuntu;
+        [ManifestResourceStream(ResourceName = "ShardOS.Files.ttf.Inter.ttf")] public static byte[] rawFontInter;
 
         public static string BuildNumber = "";
         protected override void OnBoot()
@@ -75,7 +77,7 @@ namespace ShardOS
             Mode = new Mode(1920,1080,ColorDepth.ColorDepth32);
             Canvas = FullScreenCanvas.GetFullScreenCanvas(Mode);
             logo512 = new Bitmap(rawLogo512);
-            Canvas.DrawImageAlpha(logo512,(int)(Mode.Width / 2 - 256), (int)(Mode.Height / 5));
+            Canvas.DrawImageAlpha(logo512,(int)(Mode.Width / 2 - 258), (int)(Mode.Height / 5));
             Canvas.Display();
             BuildNumber = System.Text.Encoding.UTF8.GetString(rawBuildNumber);
             DelayCode(500);
@@ -103,9 +105,9 @@ namespace ShardOS
             
             try
             {
-                DesktopGrid.gridItems.Add(new GridItem("App 1", UnknownApp, 0, 0));
-                DesktopGrid.gridItems.Add(new GridItem("App 2", UnknownApp, 1, 0));
-                DesktopGrid.gridItems.Add(new GridItem("App 3", UnknownApp, 0, 1));
+                DesktopGrid.gridItems.Add(new GridItem("Shell", UnknownApp, 0, 0,1));
+                DesktopGrid.gridItems.Add(new GridItem("Welcome", UnknownApp, 1, 0,2));
+                DesktopGrid.gridItems.Add(new GridItem("App 3", UnknownApp, 0, 1,0));
             }
             catch (Exception ex)
             {
@@ -119,7 +121,6 @@ namespace ShardOS
         {
             try
             {
-                throw new Exception();
                 //Keyboard Input
                 KeyboardEx.k = new ConsoleKeyInfo();
                 KeyboardEx.IsKeyPressed = false;
@@ -143,20 +144,69 @@ namespace ShardOS
 
         public static void KernelPanic(string message)
         {
-            // Clear the screen with a background color
-            Canvas.Clear(Color.DarkBlue);
+            int state = 0;
+            while (state == 0)
+            {
+                // Clear the screen with a background color
+                Canvas.Clear(Color.DarkBlue);
 
-            Canvas.DrawImage(Error, (int)(Mode.Width / 2 - 128), (int)(Mode.Height / 5), 256,256);
+                Canvas.DrawImage(Error, (int)(Mode.Width / 2 - 128), (int)(Mode.Height / 5), 256, 256);
 
-            // Draw the kernel panic message
-            Canvas.DrawString("KERNEL PANIC", PCScreenFont.Default, Color.Red, 20, 20);
-            Canvas.DrawString("==============", PCScreenFont.Default, Color.White, 20, 50);
-            Canvas.DrawString("A fatal error has occurred, and the system has halted.", PCScreenFont.Default, Color.White, 20, 80);
-            Canvas.DrawString("Error Details:", PCScreenFont.Default, Color.White, 20, 110);
-            Canvas.DrawString(message, PCScreenFont.Default, Color.White, 20, 140); ;
-            Canvas.DrawString("Please restart your computer.", PCScreenFont.Default, Color.White, 20, 170);
+                // Draw the kernel panic message
+                Canvas.DrawString("KERNEL PANIC", PCScreenFont.Default, Color.Red, 20, 20);
+                Canvas.DrawString("==============", PCScreenFont.Default, Color.White, 20, 50);
+                Canvas.DrawString("A fatal error has occurred, and the system has halted.", PCScreenFont.Default, Color.White, 20, 80);
+                Canvas.DrawString("Error Details:", PCScreenFont.Default, Color.White, 20, 110);
+                Canvas.DrawString(message, PCScreenFont.Default, Color.White, 20, 140); ;
+                Canvas.DrawString("Please restart your computer.", PCScreenFont.Default, Color.White, 20, 170);
 
-            Canvas.Display();
+
+                //Shutdown
+                //Kernel.Canvas.DrawFilledRectangle(Color.Orange, (int)Kernel.Canvas.Mode.Width / 2 - 128, (int)Kernel.Canvas.Mode.Height / 3 * 2, 256, 64);
+                Kernel.Canvas.DrawRectangle(Color.Red, (int)Kernel.Canvas.Mode.Width / 2 - 128, (int)Kernel.Canvas.Mode.Height / 3 * 2, 256, 64);
+                Canvas.DrawString("Shutdown", PCScreenFont.Default, Color.Green, (int)Kernel.Canvas.Mode.Width / 2 - 32, (int)Kernel.Canvas.Mode.Height / 3 * 2 + 24);
+                //Reboot
+                //Kernel.Canvas.DrawFilledRectangle(Color.Orange, (int)Kernel.Canvas.Mode.Width / 2 - 128, (int)Kernel.Canvas.Mode.Height / 3 * 2 + 65, 256, 64);
+                Kernel.Canvas.DrawRectangle(Color.Red, (int)Kernel.Canvas.Mode.Width / 2 - 128, (int)Kernel.Canvas.Mode.Height / 3 * 2 + 65, 256, 64);
+                Canvas.DrawString("Reboot", PCScreenFont.Default, Color.Green, (int)Kernel.Canvas.Mode.Width / 2 - 24, (int)Kernel.Canvas.Mode.Height / 3 * 2 + 65 + 24);
+                //Reboot
+                //Kernel.Canvas.DrawFilledRectangle(Color.Orange, (int)Kernel.Canvas.Mode.Width / 2 - 128, (int)Kernel.Canvas.Mode.Height / 3 * 2 + 130, 256, 64);
+                Kernel.Canvas.DrawRectangle(Color.Red, (int)Kernel.Canvas.Mode.Width / 2 - 128, (int)Kernel.Canvas.Mode.Height / 3 * 2 + 130, 256, 64);
+                Canvas.DrawString("Enter SAFE mode", PCScreenFont.Default, Color.Red, (int)Kernel.Canvas.Mode.Width / 2 - 64, (int)Kernel.Canvas.Mode.Height / 3 * 2 + 130 + 24);
+
+                if(MouseEx.IsMouseWithin((int)Kernel.Canvas.Mode.Width / 2 - 128, (int)Kernel.Canvas.Mode.Height / 3 * 2, 256, 64) && MouseManager.MouseState == MouseState.Left && Desktop.prevMouseState != MouseState.Left)
+                {
+                    state = 1;
+                }
+                if (MouseEx.IsMouseWithin((int)Kernel.Canvas.Mode.Width / 2 - 128, (int)Kernel.Canvas.Mode.Height / 3 * 2 + 65, 256, 64) && MouseManager.MouseState == MouseState.Left && Desktop.prevMouseState != MouseState.Left)
+                {
+                    state = 2;
+                }
+                if (MouseEx.IsMouseWithin((int)Kernel.Canvas.Mode.Width / 2 - 128, (int)Kernel.Canvas.Mode.Height / 3 * 2 + 130, 256, 64) && MouseManager.MouseState == MouseState.Left && Desktop.prevMouseState != MouseState.Left)
+                {
+                    state = 3;
+                }
+
+                Kernel.Canvas.DrawImageAlpha(Desktop.cursor, (int)MouseManager.X, (int)MouseManager.Y);
+                Canvas.Display();
+
+                Heap.Collect();
+                Desktop.prevMouseState = MouseManager.MouseState;
+            }
+            if (state == 1)
+            {
+                ACPI.Shutdown();
+            }
+            if (state == 2)
+            {
+                Power.CPUReboot();
+            }
+            if (state == 3)
+            {
+                Kernel.DrawStatusForce("Not implemented yet! Rebooting now...");
+                Kernel.DelayCode(2000);
+                Power.CPUReboot();
+            }
             // Halt the CPU
             CPU.Halt();
         }

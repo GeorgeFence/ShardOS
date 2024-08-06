@@ -12,6 +12,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -54,8 +55,9 @@ namespace ShardOS
             MouseManager.ScreenWidth = (uint)w;
             MouseManager.ScreenHeight = (uint)h;
             surface = new CGSSurface(Kernel.Canvas);
-            font = new TTFFont(Kernel.rawFontUbuntu);
+            font = new TTFFont(Kernel.rawFontInter);
             CanContinue = true;
+            DesktopGrid.Init();
         }
 
         public static void Update()
@@ -93,7 +95,7 @@ namespace ShardOS
                                 DesktopGrid.Draw();
                             }
                             WindowManager.Update(Kernel.Canvas);
-                            //DrawToSurface(surface, 14, 0, 24, FPS.ToString(), Color.Green);
+                            DrawToSurface(surface, 14, 0, 24, FPS.ToString(), Color.Green);
                             Kernel.Canvas.DrawImageAlpha(cursor, MouseX, MouseY);
                             Kernel.Canvas.Display();
                         }
@@ -102,7 +104,7 @@ namespace ShardOS
                             LogonUI.Draw();
                         }
 
-                        if (Frames == 20)
+                        if (Frames == 4)
                         {
                             Heap.Collect();
                             Frames = 0;
@@ -182,9 +184,9 @@ namespace ShardOS
         {
             int X = BottomTaskbarHeight + 2;
 
-            Kernel.Canvas.DrawFilledRectangle(Desktop.Dark,0,(int)Kernel.Canvas.Mode.Height - BottomTaskbarHeight,(int)Kernel.Canvas.Mode.Width, BottomTaskbarHeight); // Bottom taskbar
+            Kernel.Canvas.DrawFilledRectangle(Color.FromArgb(24,25,38), 0, (int)Kernel.Canvas.Mode.Height - BottomTaskbarHeight, (int)Kernel.Canvas.Mode.Width, BottomTaskbarHeight); // Bottom taskbar
 
-            Kernel.Canvas.DrawFilledRectangle(Desktop.Dark, 0, 0, (int)Kernel.Canvas.Mode.Width, 24); // Top taskbar
+            Kernel.Canvas.DrawFilledRectangle(Color.FromArgb(24,25,38), 0, 0, (int)Kernel.Canvas.Mode.Width, 24); // Top taskbar
             Kernel.Canvas.DrawImage(Kernel.User, 0, 0,24,24);
             Kernel.Canvas.DrawImage(Kernel.Control, (int)(Kernel.Mode.Width - 26), 0,24,24);
             Desktop.DrawToSurface(Desktop.surface, 20, 24, -2, UAS.ActiveUser.Username, Color.GhostWhite);
@@ -218,29 +220,89 @@ namespace ShardOS
         public static List<GridItem> gridItems = new List<GridItem>();
         public static int offset = 3;
         public static int UPoffset = 48;
+        public static Bitmap Selected;
+        public static int LastSelect;
         //public static string[] Files;
+
+        public static void Init()
+        {
+            Selected = new Bitmap(48, 64, ColorDepth.ColorDepth32);
+            List<int> data = new List<int>();
+            foreach (int i in Selected.RawData)
+            {
+                data.Add(Desktop.RgbaToHex(0, 0, 255, 50));
+            }
+            Selected.RawData = data.ToArray();
+        }
         public static void Draw()
         {
             //One item 86x86
             for (int item = 0; item < gridItems.Count; item++)
             {
+                if (gridItems[item].Selected == true)
+                {
+                    Kernel.Canvas.DrawImageAlpha(Selected, gridItems[item].x * 48, gridItems[item].y * 64 + UPoffset);
+                    Kernel.Canvas.DrawRectangle(Color.Blue, gridItems[item].x * 48, gridItems[item].y * 64 + UPoffset, 48, 64);
+                }
                 //Kernel.Canvas.DrawRectangle(Color.Azure, gridItems[item].x * 48, gridItems[item].y * 64 + UPoffset, 48, 64);
                 Kernel.Canvas.DrawImage(gridItems[item].image, gridItems[item].x * 48 + offset, gridItems[item].y * 64 + UPoffset + offset,48 - offset*2,48 - offset*2);
                 Desktop.DrawToSurface(Desktop.surface, 14, gridItems[item].x * 48 + (24 - ((gridItems[item].Title.Length / 2) * 8)), gridItems[item].y * 64 + UPoffset + 48, gridItems[item].Title.ToString(), Color.WhiteSmoke);
+                if (MouseEx.IsMouseWithin(gridItems[item].x * 48, gridItems[item].y * 64 + UPoffset, 48, 64) && MouseManager.MouseState == MouseState.Left && Desktop.prevMouseState != MouseState.Left && gridItems[item].Selected)
+                {
+                    gridItems[item].Selected = false;
+                    Execute(gridItems[item].ExecutionID);
+                }
+                if (MouseEx.IsMouseWithin(gridItems[item].x * 48, gridItems[item].y * 64 + UPoffset, 48, 64) && MouseManager.MouseState == MouseState.Left && Desktop.prevMouseState != MouseState.Left)
+                {
+                    foreach(GridItem i in gridItems)
+                    {
+                        i.Selected = false;
+                    }
+                    gridItems[item].Selected = true;
+                }
+                
             }
+        }
+
+        public static void Execute(int ExecutionID)
+        {
+            switch (ExecutionID)
+            {
+                case 0:
+                    //nothing
+                    break;
+                case 1:
+                    //Shell
+                    ShellApp.Start();
+                    break;
+                case 2:
+                    //Welcome
+                    Welcome.Start();
+                    break;
+                case 3:
+                    
+                    break;
+                case 4:
+                    
+                    break;
+            }
+                
         }
     }
     public class GridItem
     {
         public string Title;
-        public Bitmap image;
+        public Bitmap image; 
         public int x, y;
+        public bool Selected = false;
+        public int ExecutionID;
 
-        public GridItem(string title, Bitmap image, int x, int y)
+        public GridItem(string title, Bitmap image, int x, int y, int executionID)
         {
             Title = title;
             this.image = image;
             this.x = x; this.y = y;
+            ExecutionID = executionID;
         }
     }
 

@@ -43,6 +43,7 @@
       <None Remove="Files\bmp\user.bmp" />
       <None Remove="Files\bmp\userapp.bmp" />
       <None Remove="Files\bmp\wallpaper.bmp" />
+      <None Remove="Files\ttf\Inter.ttf" />
       <None Remove="Files\ttf\Ubuntu.ttf" />
       <None Remove="logo.bmp" />
       <None Remove="logo.png" />
@@ -67,6 +68,7 @@
       <EmbeddedResource Include="Files\bmp\user.bmp" />
       <EmbeddedResource Include="Files\bmp\userapp.bmp" />
       <EmbeddedResource Include="Files\bmp\wallpaper.bmp" />
+      <EmbeddedResource Include="Files\ttf\Inter.ttf" />
       <EmbeddedResource Include="Files\ttf\Ubuntu.ttf" />
       <EmbeddedResource Include="logo.png" />
     </ItemGroup>

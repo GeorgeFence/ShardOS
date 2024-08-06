@@ -12,6 +12,7 @@ namespace ShardOS.UI
         Classic,
         Modern,
         Blank,
+        DarkO,
         LUI
     };
 }

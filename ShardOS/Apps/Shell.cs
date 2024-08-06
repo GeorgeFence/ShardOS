@@ -36,7 +36,7 @@ namespace ShardOS.Apps
         {
             window = new Window(600, 300, 640, 400, "Shell", Update, DesignType.Default, PermissionsType.User, Kernel.UnknownApp);
             label = new Label(0, 0, 12, "Shell");
-            Shell.Init(window.X, window.Y + 32, window.PanelW, window.PanelH);
+            Shell.Init(window.X + 3, window.Y + 27, window.PanelW, window.PanelH);
             window.Controls.Add(label);
             WindowManager.Add(window);
         }
