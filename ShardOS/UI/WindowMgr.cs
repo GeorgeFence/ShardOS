@@ -65,7 +65,7 @@ namespace ShardOS
                 }
                 if (window.Wtype != DesignType.Blank)
                 {
-                    if (MouseEx.IsMouseWithin(window.X + window.WinW - 27, window.Y + 5, 24, 24))
+                    if (MouseEx.IsMouseWithin(window.X + window.WinW - 24, window.Y, 24, 24))
                     {
                         if (MouseManager.MouseState == MouseState.Left && Desktop.prevMouseState != MouseState.Left)
                         {

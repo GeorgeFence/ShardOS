@@ -28,8 +28,8 @@ namespace ShardOS.Apps
 
         public static void Update()
         {
-            Shell.Update();
-            Shell.Draw(window.X, window.Y + 32);
+            //Shell.Update();
+            //Shell.Draw(window.X, window.Y + 32);
         }
 
         public static void Start()

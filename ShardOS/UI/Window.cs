@@ -43,6 +43,7 @@ public class Window : Control
     internal int IY;
 
     public Bitmap WindowSkelet;
+    public Bitmap WindowCloser;
 
     public Bitmap backgroundimage;
 
@@ -74,11 +75,25 @@ public class Window : Control
         Wtype = type;
         Ptype = perType;
         this.Icon = Icon;
-        if(type == DesignType.Default)
+        WindowCloser = new Bitmap(24 + 1, 24 + 1, ColorDepth.ColorDepth32);
+        BitmapDraws.DrawFilledRoundedRectangle(WindowCloser, 0, 0, 24, 24, 5, Color.FromArgb(36, 39, 59));
+        if (type == DesignType.Default)
         {
             WindowSkelet = new Bitmap((uint)(Width + 1), (uint)(Height + 1), ColorDepth.ColorDepth32);
             BitmapDraws.DrawFilledRoundedRectangle(WindowSkelet, 0, 0, Width, Height, 5, Color.FromArgb(30, 32, 48));
-            BitmapDraws.DrawFilledRoundedRectangle(WindowSkelet, 3, 24, Width - 6, Height - 27, 5, Color.FromArgb(24, 25, 38));
+            BitmapDraws.DrawFilledRoundedRectangle(WindowSkelet, 3, 24, Width - 4, Height - 27, 5, Color.FromArgb(36, 39, 59));
+        }
+        if (type == DesignType.LUI)
+        {
+            WindowSkelet = new Bitmap((uint)(320 + 1), (uint)(240 + 1), ColorDepth.ColorDepth32);
+            BitmapDraws.DrawFilledRoundedRectangle(WindowSkelet, 0, 0, 320, 240, 5, Color.FromArgb(30, 32, 48));
+            BitmapDraws.DrawFilledRoundedRectangle(WindowSkelet, 2, 2, 320 - 4, 240 - 4, 5, Color.FromArgb(36, 39, 59));
+        }
+        if (type == DesignType.Blank)
+        {
+            WindowSkelet = new Bitmap((uint)(Width + 1), (uint)(Height + 1), ColorDepth.ColorDepth32);
+            BitmapDraws.DrawFilledRoundedRectangle(WindowSkelet, 0, 0, Width, Height, 5, Color.FromArgb(30, 32, 48));
+            BitmapDraws.DrawFilledRoundedRectangle(WindowSkelet, 2, 2, Width - 4, Height - 4, 5, Color.FromArgb(36, 39, 59));
         }
     }
     public void ProcessControls(int X, int Y, List<Control> Controls, ConsoleKeyInfo? Key, bool sel)
@@ -103,80 +118,22 @@ public class Window : Control
                         Kernel.Canvas.DrawImageAlpha(WindowSkelet,base.X,base.Y);
 
                         ProcessControls(base.X + 3, base.Y + 24, Controls, KeyboardEx.k, sel);
-                        Desktop.DrawToSurface(Desktop.surface, Kernel.DefaultFontHeight + 2, base.X + 3, base.Y + 14 - ((Kernel.DefaultFontHeight + 2) / 2), Title, Color.White);
-                        break;
-
-                    case DesignType.Classic:
-                        if (Ptype == PermissionsType.User)
+                        Desktop.DrawToSurface(Desktop.surface, Kernel.DefaultFontHeight + 2, base.X + 3, base.Y + 2, Title, Color.White);
+                        if(MouseEx.IsMouseWithin((int)(base.X + WindowSkelet.Width - 24), base.Y, 24,24))
                         {
-                            Canvas.DrawFilledRectangle(System.Drawing.Color.SteelBlue, base.X, base.Y, 0, 32);
+                            Kernel.Canvas.DrawImageAlpha(WindowCloser, (int)(base.X + WindowSkelet.Width - 24), base.Y);
                         }
-                        else if (Ptype == PermissionsType.System)
-                        {
-                            Canvas.DrawFilledRectangle(System.Drawing.Color.Red, base.X, base.Y, 0, 32);
-                        }
-                        else if (Ptype == PermissionsType.Service)
-                        {
-                            Canvas.DrawFilledRectangle(System.Drawing.Color.Green, base.X, base.Y, 0, 32);
-                        }
-                        Canvas.DrawFilledRectangle(System.Drawing.Color.GhostWhite, base.X, base.Y + 32, (ushort)(base.Width - 32), base.Height);
-                        ProcessControls(base.X + 6, base.Y + 33, Controls, KeyboardEx.k, sel);
-                        Desktop.DrawToSurface(Desktop.surface, Kernel.DefaultFontHeight + 2, base.X + 8, base.Y + (32 / 2) - ((Kernel.DefaultFontHeight + 2) / 2), Title, Color.White);
-                        break;
-
-                    case DesignType.Modern:
-                        if (Ptype == PermissionsType.User)
-                        {
-
-                            Canvas.DrawFilledRectangle(System.Drawing.Color.FromArgb(0, 0, 255), X, Y, (ushort)w, WinH);
-                            Canvas.DrawImage(Kernel.UserApp, X + w, Y);
-                            Canvas.DrawImage(Kernel.UserApp, X + w, Y + WinH - 32);
-                            Canvas.DrawFilledRectangle(System.Drawing.Color.FromArgb(255, 0, 255), (X + w + 255), Y, (ushort)((WinW - 255) / 2), WinH);
-                            Canvas.DrawImageAlpha(Kernel.ExitApp, X + WinW - 27, Y + 5);
-
-
-                            Canvas.DrawFilledRectangle(System.Drawing.Color.Black, X + 5, Y + 32, (ushort)(WinW - 10), (ushort)(WinH - 37));
-                            Canvas.DrawFilledRectangle(System.Drawing.Color.White, X + 6, Y + 33, (ushort)(WinW - 12), (ushort)(WinH - 39));
-                            ProcessControls(base.X + 6, base.Y + 33, Controls, KeyboardEx.k, sel);
-                            Desktop.DrawToSurface(Desktop.surface, Kernel.DefaultFontHeight, base.X + 5, base.Y + 8, Title, Color.White);
-                        }
-                        else if (Ptype == PermissionsType.System)
-                        {
-                            Canvas.DrawFilledRectangle(System.Drawing.Color.FromArgb(255, 0, 0), X, Y, (ushort)w, WinH);
-                            Canvas.DrawImage(Kernel.SystemApp, X + w, Y);
-                            Canvas.DrawImage(Kernel.SystemApp, X + w, Y + WinH - 32);
-                            Canvas.DrawFilledRectangle(System.Drawing.Color.FromArgb(255, 0, 255), (X + w + 255), Y, (ushort)((WinW - 255) / 2), WinH);
-                            Canvas.DrawImageAlpha(Kernel.ExitApp, X + WinW - 27, Y + 5);
-
-                            Canvas.DrawFilledRectangle(System.Drawing.Color.Black, X + 5, Y + 32, (ushort)(WinW - 10), (ushort)(WinH - 37));
-                            Canvas.DrawFilledRectangle(System.Drawing.Color.White, X + 6, Y + 33, (ushort)(WinW - 12), (ushort)(WinH - 39));
-                            ProcessControls(base.X + 6, base.Y + 33, Controls, KeyboardEx.k, sel);
-                            Desktop.DrawToSurface(Desktop.surface, Kernel.DefaultFontHeight, base.X + 5, base.Y + 8, Title, Color.White);
-
-                        }
-                        else if (Ptype == PermissionsType.Service)
-                        {
-                            Canvas.DrawFilledRectangle(System.Drawing.Color.FromArgb(0, 255, 0), X, Y, (ushort)w, WinH);
-                            Canvas.DrawImage(Kernel.ServiceApp, X + w, Y);
-                            Canvas.DrawImage(Kernel.ServiceApp, X + w, Y + WinH - 32);
-                            Canvas.DrawFilledRectangle(System.Drawing.Color.FromArgb(255, 0, 255), (X + w + 255), Y, (ushort)((WinW - 255) / 2), WinH);
-                            Canvas.DrawImageAlpha(Kernel.ExitApp, X + WinW - 27, Y + 5);
-
-                            Canvas.DrawFilledRectangle(System.Drawing.Color.Black, X + 5, Y + 32, (ushort)(WinW - 10), (ushort)(WinH - 37));
-                            Canvas.DrawFilledRectangle(System.Drawing.Color.White, X + 6, Y + 33, (ushort)(WinW - 12), (ushort)(WinH - 39));
-                            ProcessControls(base.X + 6, base.Y + 33, Controls, KeyboardEx.k, sel);
-                            Desktop.DrawToSurface(Desktop.surface, Kernel.DefaultFontHeight, base.X + 5, base.Y + 8, Title, Color.White);
-
-                        }
+                        Kernel.Canvas.DrawImage(Kernel.ExitApp, (int)(base.X + WindowSkelet.Width - 21), base.Y + 3,18,18);
                         break;
 
                     case DesignType.Blank:
-                        Canvas.DrawFilledRectangle(Background, base.X, base.Y, WinW, WinH);
+                        Kernel.Canvas.DrawImageAlpha(WindowSkelet, base.X, base.Y);
                         ProcessControls(base.X, base.Y, Controls, KeyboardEx.k, sel);
                         break;
 
                     case DesignType.LUI:
                         Canvas.DrawImage(backgroundimage, 0, 0);
+                        Kernel.Canvas.DrawImageAlpha(WindowSkelet, base.X + PanelW / 2 - 160, base.Y + PanelH / 2 - 120);
                         ProcessControls(base.X, base.Y, Controls, KeyboardEx.k, sel);
                         break;
                 }

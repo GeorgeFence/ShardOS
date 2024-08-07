@@ -9,10 +9,7 @@ namespace ShardOS.UI
     public enum DesignType
     {
         Default,
-        Classic,
-        Modern,
         Blank,
-        DarkO,
         LUI
     };
 }

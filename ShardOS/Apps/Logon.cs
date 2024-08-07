@@ -76,6 +76,7 @@ namespace ShardOS.Apps
                         {
                             UAS.ActiveUser = us;
                             Stop();
+                            MessageBox.Show("LogonUI", "User was Successfully loged in!");
                             //Welcome.Start();
                             //ShellApp.Start();
                         }
@@ -95,7 +96,7 @@ namespace ShardOS.Apps
             WindowManager.StopAll();
             window = new Window(0,0,(ushort)Kernel.Canvas.Mode.Width,(ushort)Kernel.Canvas.Mode.Height, "LogonUI", Update, DesignType.LUI, PermissionsType.User, Kernel.UnknownApp);
             window.backgroundimage = wallpaper;
-            panel = new Panel(window.PanelW/2 - 160, window.PanelH/2 - 120, 320, 240, Desktop.Dark);
+            panel = new Panel(window.PanelW/2 - 160, window.PanelH/2 - 120, 320, 240, Desktop.Dark);// FOR CONTROL ORIENTATION !! IMPORTANT
             Label = new Label(panel.X + 5, panel.Y + 5, 8, "Welcome back " + UserName + "!");
             Label.fg = Color.White;
             edittext = new Edittext(panel.X + 5, panel.Y + 22, 310, 20);
@@ -103,7 +104,6 @@ namespace ShardOS.Apps
             edittext.bg = Desktop.DarkL;
             edittext.Selected = true;
             ButtonLogin = new Button(panel.X + panel.Widt - 37, panel.Y + panel.Heig - 21, 32, 16, 0, "OK", true, Desktop.Dark,Desktop.DarkL, System.Drawing.Color.White, Color.Black);
-            window.Controls.Add(panel);
             window.Controls.Add(Label);
             window.Controls.Add(ButtonLogin);
             window.Controls.Add(edittext);

@@ -1,22 +1,15 @@
-﻿using Cosmos.Core;
-using Cosmos.Core.Memory;
+﻿using Cosmos.Core.Memory;
 using Cosmos.HAL;
 using Cosmos.System;
 using Cosmos.System.Graphics;
-using Cosmos.System.Graphics.Fonts;
 using CosmosTTF;
 using ShardOS.Apps;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
-using System.Linq;
-using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
-using static System.Net.Mime.MediaTypeNames;
 
 namespace ShardOS
 {
@@ -30,7 +23,7 @@ namespace ShardOS
         public static TTFFont font;
 
         public static Color DarkS = Color.FromArgb(15, 15, 15);
-        public static Color Dark = Color.FromArgb(30,30,30);
+        public static Color Dark = Color.FromArgb(30, 30, 30);
         public static Color DarkM = Color.FromArgb(40, 40, 40);
         public static Color DarkL = Color.FromArgb(45, 45, 45);
         public static Color DarkXL = Color.FromArgb(50, 50, 50);
@@ -69,7 +62,7 @@ namespace ShardOS
                     if (IsShell)
                     {
                         Shell.Update();
-                        Shell.Draw(0,0);
+                        Shell.Draw(0, 0);
                         Kernel.Canvas.Display();
                     }
                     else
@@ -184,17 +177,17 @@ namespace ShardOS
         {
             int X = BottomTaskbarHeight + 2;
 
-            Kernel.Canvas.DrawFilledRectangle(Color.FromArgb(24,25,38), 0, (int)Kernel.Canvas.Mode.Height - BottomTaskbarHeight, (int)Kernel.Canvas.Mode.Width, BottomTaskbarHeight); // Bottom taskbar
+            Kernel.Canvas.DrawFilledRectangle(Color.FromArgb(24, 25, 38), 0, (int)Kernel.Canvas.Mode.Height - BottomTaskbarHeight, (int)Kernel.Canvas.Mode.Width, BottomTaskbarHeight); // Bottom taskbar
 
-            Kernel.Canvas.DrawFilledRectangle(Color.FromArgb(24,25,38), 0, 0, (int)Kernel.Canvas.Mode.Width, 24); // Top taskbar
-            Kernel.Canvas.DrawImage(Kernel.User, 0, 0,24,24);
-            Kernel.Canvas.DrawImage(Kernel.Control, (int)(Kernel.Mode.Width - 26), 0,24,24);
+            Kernel.Canvas.DrawFilledRectangle(Color.FromArgb(24, 25, 38), 0, 0, (int)Kernel.Canvas.Mode.Width, 24); // Top taskbar
+            Kernel.Canvas.DrawImage(Kernel.User, 0, 0, 24, 24);
+            Kernel.Canvas.DrawImage(Kernel.Control, (int)(Kernel.Mode.Width - 26), 0, 24, 24);
             Desktop.DrawToSurface(Desktop.surface, 20, 24, -2, UAS.ActiveUser.Username, Color.GhostWhite);
-            Desktop.DrawToSurface(Desktop.surface, 20,(int)(Kernel.Mode.Width - 86), -2, RTC.Hour + ":" + RTC.Minute, Color.White);
+            Desktop.DrawToSurface(Desktop.surface, 20, (int)(Kernel.Mode.Width - 86), -2, RTC.Hour + ":" + RTC.Minute, Color.White);
 
-            Kernel.Canvas.DrawImage(Kernel.logo512,0,(int)Kernel.Canvas.Mode.Height - BottomTaskbarHeight, BottomTaskbarHeight,BottomTaskbarHeight); // Start button
+            Kernel.Canvas.DrawImage(Kernel.logo512, 0, (int)Kernel.Canvas.Mode.Height - BottomTaskbarHeight, BottomTaskbarHeight, BottomTaskbarHeight); // Start button
 
-            if(MouseEx.IsMouseWithin(0, (int)Kernel.Canvas.Mode.Height - BottomTaskbarHeight, (ushort)BottomTaskbarHeight, (ushort)BottomTaskbarHeight) && MouseManager.MouseState == MouseState.Left && Desktop.prevMouseState != MouseState.Left)
+            if (MouseEx.IsMouseWithin(0, (int)Kernel.Canvas.Mode.Height - BottomTaskbarHeight, (ushort)BottomTaskbarHeight, (ushort)BottomTaskbarHeight) && MouseManager.MouseState == MouseState.Left && Desktop.prevMouseState != MouseState.Left)
             {
                 Menu.Start();
             }
@@ -205,7 +198,7 @@ namespace ShardOS
                 {
                     Kernel.Canvas.DrawFilledRectangle(System.Drawing.Color.Gray, X, (Int32)(Kernel.Canvas.Mode.Height - BottomTaskbarHeight), BottomTaskbarHeight, BottomTaskbarHeight);
                 }
-                Kernel.Canvas.DrawImage(WindowManager.Windows[j].Icon, X + 2, (int)(Kernel.Canvas.Mode.Height - BottomTaskbarHeight + 2),BottomTaskbarHeight - 4,BottomTaskbarHeight - 4);
+                Kernel.Canvas.DrawImage(WindowManager.Windows[j].Icon, X + 2, (int)(Kernel.Canvas.Mode.Height - BottomTaskbarHeight + 2), BottomTaskbarHeight - 4, BottomTaskbarHeight - 4);
                 if (MouseEx.IsMouseWithin(X, (int)(Kernel.Canvas.Mode.Height - BottomTaskbarHeight), (ushort)BottomTaskbarHeight, (ushort)BottomTaskbarHeight) && MouseManager.MouseState == MouseState.Left && Desktop.prevMouseState != MouseState.Left)
                 {
                     WindowManager.Selected = WindowManager.Windows[j].Title;
@@ -226,26 +219,34 @@ namespace ShardOS
 
         public static void Init()
         {
-            Selected = new Bitmap(48, 64, ColorDepth.ColorDepth32);
-            List<int> data = new List<int>();
-            foreach (int i in Selected.RawData)
+            Selected = new Bitmap(48 + 1, 64 + 1, ColorDepth.ColorDepth32);
+            BitmapDraws.DrawFilledRoundedRectangle(Selected, 0, 0, 48, 64, 3, Color.White);
+            List<int> l = new List<int>();
+            for (int i = 0; i < (Selected.Width * Selected.Height); i++)
             {
-                data.Add(Desktop.RgbaToHex(0, 0, 255, 50));
+                if (Selected.RawData[i] != 0)
+                {
+                    l.Add(Desktop.RgbaToHex(138, 173, 244, 190));
+                }
+                else
+                {
+                    l.Add(0);
+                }
             }
-            Selected.RawData = data.ToArray();
+            Selected.RawData = l.ToArray();
         }
         public static void Draw()
         {
-            //One item 86x86
+            //One item 48x64
             for (int item = 0; item < gridItems.Count; item++)
             {
                 if (gridItems[item].Selected == true)
                 {
                     Kernel.Canvas.DrawImageAlpha(Selected, gridItems[item].x * 48, gridItems[item].y * 64 + UPoffset);
-                    Kernel.Canvas.DrawRectangle(Color.Blue, gridItems[item].x * 48, gridItems[item].y * 64 + UPoffset, 48, 64);
+                    //Kernel.Canvas.DrawRectangle(Color.Blue, gridItems[item].x * 48, gridItems[item].y * 64 + UPoffset, 48, 64);
                 }
                 //Kernel.Canvas.DrawRectangle(Color.Azure, gridItems[item].x * 48, gridItems[item].y * 64 + UPoffset, 48, 64);
-                Kernel.Canvas.DrawImage(gridItems[item].image, gridItems[item].x * 48 + offset, gridItems[item].y * 64 + UPoffset + offset,48 - offset*2,48 - offset*2);
+                Kernel.Canvas.DrawImage(gridItems[item].image, gridItems[item].x * 48 + offset, gridItems[item].y * 64 + UPoffset + offset, 48 - offset * 2, 48 - offset * 2);
                 Desktop.DrawToSurface(Desktop.surface, 14, gridItems[item].x * 48 + (24 - ((gridItems[item].Title.Length / 2) * 8)), gridItems[item].y * 64 + UPoffset + 48, gridItems[item].Title.ToString(), Color.WhiteSmoke);
                 if (MouseEx.IsMouseWithin(gridItems[item].x * 48, gridItems[item].y * 64 + UPoffset, 48, 64) && MouseManager.MouseState == MouseState.Left && Desktop.prevMouseState != MouseState.Left && gridItems[item].Selected)
                 {
@@ -254,13 +255,13 @@ namespace ShardOS
                 }
                 if (MouseEx.IsMouseWithin(gridItems[item].x * 48, gridItems[item].y * 64 + UPoffset, 48, 64) && MouseManager.MouseState == MouseState.Left && Desktop.prevMouseState != MouseState.Left)
                 {
-                    foreach(GridItem i in gridItems)
+                    foreach (GridItem i in gridItems)
                     {
                         i.Selected = false;
                     }
                     gridItems[item].Selected = true;
                 }
-                
+
             }
         }
 
@@ -280,19 +281,19 @@ namespace ShardOS
                     Welcome.Start();
                     break;
                 case 3:
-                    
+
                     break;
                 case 4:
-                    
+
                     break;
             }
-                
+
         }
     }
     public class GridItem
     {
         public string Title;
-        public Bitmap image; 
+        public Bitmap image;
         public int x, y;
         public bool Selected = false;
         public int ExecutionID;

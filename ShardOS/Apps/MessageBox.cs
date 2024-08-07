@@ -9,6 +9,7 @@ using System.Linq;
 using System.Security.Principal;
 using System.Text;
 using System.Threading.Tasks;
+using System.Drawing;
 
 namespace ShardOS.Apps
 {
@@ -41,6 +42,7 @@ namespace ShardOS.Apps
         {
             window = new Window(100, 100, 320, 100, Title(), Update, DesignType.Default, PermissionsType.System, Kernel.UnknownApp);
             Label = new Label(3, 3, 8, "");
+            Label.fg = Color.White;
             Button = new Button(window.PanelW - 42, window.PanelH - 26, 32, 16, 0, "OK", true, System.Drawing.Color.White, System.Drawing.Color.SteelBlue, System.Drawing.Color.Black, System.Drawing.Color.Red);
             window.Controls.Add(Label);
             window.Controls.Add(Button);
@@ -50,6 +52,7 @@ namespace ShardOS.Apps
         public static void Show(string Title, string Description)
         {
             titleText = Title;
+            Label.Text = Description;
             Start();
 
         }
