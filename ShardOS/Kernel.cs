@@ -174,24 +174,24 @@ namespace ShardOS
                 Kernel.Canvas.DrawRectangle(Color.Red, (int)Kernel.Canvas.Mode.Width / 2 - 128, (int)Kernel.Canvas.Mode.Height / 3 * 2 + 130, 256, 64);
                 Canvas.DrawString("Enter SAFE mode", PCScreenFont.Default, Color.Red, (int)Kernel.Canvas.Mode.Width / 2 - 64, (int)Kernel.Canvas.Mode.Height / 3 * 2 + 130 + 24);
 
-                if(MouseEx.IsMouseWithin((int)Kernel.Canvas.Mode.Width / 2 - 128, (int)Kernel.Canvas.Mode.Height / 3 * 2, 256, 64) && MouseManager.MouseState == MouseState.Left && Desktop.prevMouseState != MouseState.Left)
+                if(MouseEx.IsMouseWithin((int)Kernel.Canvas.Mode.Width / 2 - 128, (int)Kernel.Canvas.Mode.Height / 3 * 2, 256, 64) && MouseManager.MouseState == MouseState.Left && MouseEx.LeftClick)
                 {
                     state = 1;
                 }
-                if (MouseEx.IsMouseWithin((int)Kernel.Canvas.Mode.Width / 2 - 128, (int)Kernel.Canvas.Mode.Height / 3 * 2 + 65, 256, 64) && MouseManager.MouseState == MouseState.Left && Desktop.prevMouseState != MouseState.Left)
+                if (MouseEx.IsMouseWithin((int)Kernel.Canvas.Mode.Width / 2 - 128, (int)Kernel.Canvas.Mode.Height / 3 * 2 + 65, 256, 64) && MouseManager.MouseState == MouseState.Left && MouseEx.LeftClick)
                 {
                     state = 2;
                 }
-                if (MouseEx.IsMouseWithin((int)Kernel.Canvas.Mode.Width / 2 - 128, (int)Kernel.Canvas.Mode.Height / 3 * 2 + 130, 256, 64) && MouseManager.MouseState == MouseState.Left && Desktop.prevMouseState != MouseState.Left)
+                if (MouseEx.IsMouseWithin((int)Kernel.Canvas.Mode.Width / 2 - 128, (int)Kernel.Canvas.Mode.Height / 3 * 2 + 130, 256, 64) && MouseManager.MouseState == MouseState.Left && MouseEx.LeftClick)
                 {
                     state = 3;
                 }
 
-                Kernel.Canvas.DrawImageAlpha(Desktop.cursor, (int)MouseManager.X, (int)MouseManager.Y);
+                Desktop.DrawImageAlpha(Desktop.cursor, (int)MouseManager.X, (int)MouseManager.Y);
                 Canvas.Display();
 
                 Heap.Collect();
-                Desktop.prevMouseState = MouseManager.MouseState;
+                MouseEx.Mouse();
             }
             if (state == 1)
             {

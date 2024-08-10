@@ -75,13 +75,13 @@ public class Window : Control
         Wtype = type;
         Ptype = perType;
         this.Icon = Icon;
-        WindowCloser = new Bitmap(24 + 1, 24 + 1, ColorDepth.ColorDepth32);
+        WindowCloser = new Bitmap(25, 25, ColorDepth.ColorDepth32);
         BitmapDraws.DrawFilledRoundedRectangle(WindowCloser, 0, 0, 24, 24, 5, Color.FromArgb(36, 39, 59));
         if (type == DesignType.Default)
         {
             WindowSkelet = new Bitmap((uint)(Width + 1), (uint)(Height + 1), ColorDepth.ColorDepth32);
             BitmapDraws.DrawFilledRoundedRectangle(WindowSkelet, 0, 0, Width, Height, 5, Color.FromArgb(30, 32, 48));
-            BitmapDraws.DrawFilledRoundedRectangle(WindowSkelet, 3, 24, Width - 4, Height - 27, 5, Color.FromArgb(36, 39, 59));
+            BitmapDraws.DrawFilledRoundedRectangle(WindowSkelet, 3, 24, Width - 6, Height - 27, 5, Color.FromArgb(36, 39, 59));
         }
         if (type == DesignType.LUI)
         {
@@ -115,25 +115,25 @@ public class Window : Control
                 {
                     case DesignType.Default:
 
-                        Kernel.Canvas.DrawImageAlpha(WindowSkelet,base.X,base.Y);
+                        Desktop.DrawImageAlpha(WindowSkelet,base.X,base.Y);
 
                         ProcessControls(base.X + 3, base.Y + 24, Controls, KeyboardEx.k, sel);
                         Desktop.DrawToSurface(Desktop.surface, Kernel.DefaultFontHeight + 2, base.X + 3, base.Y + 2, Title, Color.White);
                         if(MouseEx.IsMouseWithin((int)(base.X + WindowSkelet.Width - 24), base.Y, 24,24))
                         {
-                            Kernel.Canvas.DrawImageAlpha(WindowCloser, (int)(base.X + WindowSkelet.Width - 24), base.Y);
+                            Desktop.DrawImageAlpha(WindowCloser, (int)(base.X + WindowSkelet.Width - 24), base.Y);
                         }
                         Kernel.Canvas.DrawImage(Kernel.ExitApp, (int)(base.X + WindowSkelet.Width - 21), base.Y + 3,18,18);
                         break;
 
                     case DesignType.Blank:
-                        Kernel.Canvas.DrawImageAlpha(WindowSkelet, base.X, base.Y);
+                        Desktop.DrawImageAlpha(WindowSkelet, base.X, base.Y);
                         ProcessControls(base.X, base.Y, Controls, KeyboardEx.k, sel);
                         break;
 
                     case DesignType.LUI:
                         Canvas.DrawImage(backgroundimage, 0, 0);
-                        Kernel.Canvas.DrawImageAlpha(WindowSkelet, base.X + PanelW / 2 - 160, base.Y + PanelH / 2 - 120);
+                        Desktop.DrawImageAlpha(WindowSkelet, base.X + PanelW / 2 - 160, base.Y + PanelH / 2 - 120);
                         ProcessControls(base.X, base.Y, Controls, KeyboardEx.k, sel);
                         break;
                 }

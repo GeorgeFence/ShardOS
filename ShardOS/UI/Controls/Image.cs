@@ -44,7 +44,7 @@ namespace ShardOS.UI.Controls
         {
             if (Alpha)
             {
-                Kernel.Canvas.DrawImageAlpha(image,X + Xpos,Y + Ypos);
+                Desktop.DrawImageAlpha(image,X + Xpos,Y + Ypos);
             }
             else
             {
