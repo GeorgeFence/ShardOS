@@ -57,7 +57,7 @@ namespace ShardOS.UI.Controls
             Desktop.DrawToSurface(Desktop.surface, Kernel.DefaultFontHeight, (X + W / 2 + Xpos) - ((Text.Length / 2) * 8), (Y + H / 4 + Ypos - 4), Text, Fg);
             if (MouseEx.IsMouseWithin(X + Xpos, Y + Ypos, (ushort)W, (ushort)H))
             {
-                if ( MouseManager.LastMouseState != MouseState.Left && sel)
+                if ( MouseEx.LeftClick && sel)
                 {
                     IsClicked = true;
                     canvas.DrawFilledRectangle(Bg2, X + Xpos, Y + Ypos, W, H);

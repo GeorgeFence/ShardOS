@@ -179,7 +179,7 @@ namespace ShardOS
                     Kernel.Canvas.DrawFilledRectangle(System.Drawing.Color.Gray, X, (Int32)(Kernel.Canvas.Mode.Height - BottomTaskbarHeight), BottomTaskbarHeight, BottomTaskbarHeight);
                 }
                 Kernel.Canvas.DrawImage(WindowManager.Windows[j].Icon, X + 2, (int)(Kernel.Canvas.Mode.Height - BottomTaskbarHeight + 2), BottomTaskbarHeight - 4, BottomTaskbarHeight - 4);
-                if (MouseEx.IsMouseWithin(X, (int)(Kernel.Canvas.Mode.Height - BottomTaskbarHeight), (ushort)BottomTaskbarHeight, (ushort)BottomTaskbarHeight) &&  && MouseEx.LeftClick)
+                if (MouseEx.IsMouseWithin(X, (int)(Kernel.Canvas.Mode.Height - BottomTaskbarHeight), (ushort)BottomTaskbarHeight, (ushort)BottomTaskbarHeight) && MouseEx.LeftClick)
                 {
                     WindowManager.Selected = WindowManager.Windows[j].Title;
                 }
@@ -222,7 +222,7 @@ namespace ShardOS
             {
                 if (gridItems[item].Selected == true)
                 {
-                    Desktop.DrawImage(Selected, gridItems[item].x * 48, gridItems[item].y * 64 + UPoffset);
+                    Desktop.DrawImageAlpha(Selected, gridItems[item].x * 48, gridItems[item].y * 64 + UPoffset);
                     //Kernel.Canvas.DrawRectangle(Color.Blue, gridItems[item].x * 48, gridItems[item].y * 64 + UPoffset, 48, 64);
                 }
                 //Kernel.Canvas.DrawRectangle(Color.Azure, gridItems[item].x * 48, gridItems[item].y * 64 + UPoffset, 48, 64);
