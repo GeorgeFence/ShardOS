@@ -42,7 +42,7 @@ namespace ShardOS.Apps
                 Color col = Desktop.Dark;
                 if (MouseEx.IsMouseWithin(0, (int)(Kernel.Mode.Height - (UAS.Users.Count * 64) + (i * 64)), 192, 64))
                 {
-                    if (MouseManager.MouseState == MouseState.Left && MouseEx.LeftClick)
+                    if (MouseEx.LeftClick)
                     {
                         col = Color.FromArgb(45, 45, 45);
                         Logon.UserName = UAS.Users[i].Username;

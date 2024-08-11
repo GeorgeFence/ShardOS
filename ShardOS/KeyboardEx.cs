@@ -14,20 +14,6 @@ namespace ShardOS
         public static ConsoleKeyInfo k;
         public static bool IsKeyPressed = false;
 
-        static KeyboardEx()
-        {
-            Callbacks = new List<Action<ConsoleKeyInfo>>();
-            new Timer(delegate
-            {
-                if (TryReadKey(out var Key))
-                {
-                    for (int i = 0; i < Callbacks.Count; i = checked(i + 1))
-                    {
-                        Callbacks[i](Key);
-                    }
-                }
-            }, null, 150, false);
-        }
 
         public static void RegisterCallback(Action<ConsoleKeyInfo> CallBack)
         {

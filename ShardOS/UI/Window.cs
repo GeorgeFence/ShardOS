@@ -114,7 +114,6 @@ public class Window : Control
                 switch (Wtype)
                 {
                     case DesignType.Default:
-
                         Desktop.DrawImageAlpha(WindowSkelet,base.X,base.Y);
 
                         ProcessControls(base.X + 3, base.Y + 24, Controls, KeyboardEx.k, sel);

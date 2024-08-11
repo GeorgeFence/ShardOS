@@ -28,11 +28,6 @@ namespace ShardOS
         public static Color DarkL = Color.FromArgb(45, 45, 45);
         public static Color DarkXL = Color.FromArgb(50, 50, 50);
 
-        public static bool once = true;
-        public static int start;
-        public static int Count;
-        public static int FPS;
-
         public static bool CanContinue = false;
         public static bool OnlyWindowsMouse = false;
 
@@ -62,10 +57,6 @@ namespace ShardOS
                     }
                     else
                     {
-
-                        if (once) { start = Cosmos.HAL.RTC.Hour * 3600 + Cosmos.HAL.RTC.Minute * 60 + Cosmos.HAL.RTC.Second + 1; once = false; }
-                        if (start == ((Cosmos.HAL.RTC.Hour * 3600 + Cosmos.HAL.RTC.Minute * 60 + Cosmos.HAL.RTC.Second))) { once = true; FPS = Count; Count = 0; }
-
                         if (UAS.ActiveUser.Username != UAS.defaultuser.Username)
                         {
                             Kernel.Canvas.DrawImage(wallpaper, 0, 0);
@@ -83,13 +74,6 @@ namespace ShardOS
                             LogonUI.Draw();
                         }
 
-                        if (Frames == 4)
-                        {
-                            Heap.Collect();
-                            Frames = 0;
-                        }
-                        Frames++;
-                        Count++;
                         MouseEx.Mouse();
                     }
                 }
@@ -101,6 +85,7 @@ namespace ShardOS
             }
 
         }
+
         public static void DrawImageAlpha(Cosmos.System.Graphics.Image image, int x, int y)
         {
             for (int i = 0; i < image.Width; i++)
@@ -172,17 +157,17 @@ namespace ShardOS
             i += RTC.Minute;
             Desktop.DrawToSurface(Desktop.surface, 20, (int)(Kernel.Mode.Width - 86), -2, RTC.Hour + ":" + i, Color.White);
 
-            if (Desktop.FPS < 30)
+            if (CobaltCore._fps < 30)
             {
-                Desktop.DrawToSurface(Desktop.surface, 20, (int)(Kernel.Mode.Width - 108), -2,Desktop.FPS.ToString(), Color.Red);
+                Desktop.DrawToSurface(Desktop.surface, 20, (int)(Kernel.Mode.Width - 116), -2, CobaltCore._fps.ToString(), Color.Red);
             }
-            if (Desktop.FPS >= 30)
+            if (CobaltCore._fps >= 30)
             {
-                Desktop.DrawToSurface(Desktop.surface, 20, (int)(Kernel.Mode.Width - 108), -2, Desktop.FPS.ToString(), Color.Green);
+                Desktop.DrawToSurface(Desktop.surface, 20, (int)(Kernel.Mode.Width - 116), -2, CobaltCore._fps.ToString(), Color.Green);
             }
             Kernel.Canvas.DrawImage(Kernel.logo512, 0, (int)Kernel.Canvas.Mode.Height - BottomTaskbarHeight, BottomTaskbarHeight, BottomTaskbarHeight); // Start button
 
-            if (MouseEx.IsMouseWithin(0, (int)Kernel.Canvas.Mode.Height - BottomTaskbarHeight, (ushort)BottomTaskbarHeight, (ushort)BottomTaskbarHeight) && MouseManager.MouseState == MouseState.Left && MouseEx.LeftClick)
+            if (MouseEx.IsMouseWithin(0, (int)Kernel.Canvas.Mode.Height - BottomTaskbarHeight, (ushort)BottomTaskbarHeight, (ushort)BottomTaskbarHeight)&& MouseEx.LeftClick)
             {
                 Menu.Start();
             }
@@ -194,7 +179,7 @@ namespace ShardOS
                     Kernel.Canvas.DrawFilledRectangle(System.Drawing.Color.Gray, X, (Int32)(Kernel.Canvas.Mode.Height - BottomTaskbarHeight), BottomTaskbarHeight, BottomTaskbarHeight);
                 }
                 Kernel.Canvas.DrawImage(WindowManager.Windows[j].Icon, X + 2, (int)(Kernel.Canvas.Mode.Height - BottomTaskbarHeight + 2), BottomTaskbarHeight - 4, BottomTaskbarHeight - 4);
-                if (MouseEx.IsMouseWithin(X, (int)(Kernel.Canvas.Mode.Height - BottomTaskbarHeight), (ushort)BottomTaskbarHeight, (ushort)BottomTaskbarHeight) && MouseManager.MouseState == MouseState.Left && MouseEx.LeftClick)
+                if (MouseEx.IsMouseWithin(X, (int)(Kernel.Canvas.Mode.Height - BottomTaskbarHeight), (ushort)BottomTaskbarHeight, (ushort)BottomTaskbarHeight) &&  && MouseEx.LeftClick)
                 {
                     WindowManager.Selected = WindowManager.Windows[j].Title;
                 }
@@ -237,18 +222,18 @@ namespace ShardOS
             {
                 if (gridItems[item].Selected == true)
                 {
-                    Desktop.DrawImageAlpha(Selected, gridItems[item].x * 48, gridItems[item].y * 64 + UPoffset);
+                    Desktop.DrawImage(Selected, gridItems[item].x * 48, gridItems[item].y * 64 + UPoffset);
                     //Kernel.Canvas.DrawRectangle(Color.Blue, gridItems[item].x * 48, gridItems[item].y * 64 + UPoffset, 48, 64);
                 }
                 //Kernel.Canvas.DrawRectangle(Color.Azure, gridItems[item].x * 48, gridItems[item].y * 64 + UPoffset, 48, 64);
                 Kernel.Canvas.DrawImage(gridItems[item].image, gridItems[item].x * 48 + offset, gridItems[item].y * 64 + UPoffset + offset, 48 - offset * 2, 48 - offset * 2);
                 Desktop.DrawToSurface(Desktop.surface, 14, gridItems[item].x * 48 + (24 - ((gridItems[item].Title.Length / 2) * 8)), gridItems[item].y * 64 + UPoffset + 48, gridItems[item].Title.ToString(), Color.WhiteSmoke);
-                if (MouseEx.IsMouseWithin(gridItems[item].x * 48, gridItems[item].y * 64 + UPoffset, 48, 64) && MouseManager.MouseState == MouseState.Left && MouseEx.LeftClick && gridItems[item].Selected)
+                if (MouseEx.IsMouseWithin(gridItems[item].x * 48, gridItems[item].y * 64 + UPoffset, 48, 64) && MouseEx.LeftClick && gridItems[item].Selected)
                 {
                     gridItems[item].Selected = false;
                     Execute(gridItems[item].ExecutionID);
                 }
-                if (MouseEx.IsMouseWithin(gridItems[item].x * 48, gridItems[item].y * 64 + UPoffset, 48, 64) && MouseManager.MouseState == MouseState.Left && MouseEx.LeftClick)
+                if (MouseEx.IsMouseWithin(gridItems[item].x * 48, gridItems[item].y * 64 + UPoffset, 48, 64) && MouseEx.LeftClick)
                 {
                     foreach (GridItem i in gridItems)
                     {

@@ -58,7 +58,7 @@ namespace ShardOS.UI.Controls
                     Kernel.Canvas.DrawFilledRectangle(System.Drawing.Color.DarkGray,(int)(X + Xpos -((Text.Length /2 ) * 8) + (image.Height / 2)) ,(int)(Y + Ypos + image.Height - 16), Text.Length * 8, 16);
                     Desktop.DrawToSurface(Desktop.surface, Kernel.DefaultFontHeight, (int)(X + Xpos - ((Text.Length / 2) * 8) + (image.Height / 2)), (int)(Y + Ypos + image.Height - 16),Text, Color.White);
                 }
-                if (MouseManager.MouseState == MouseState.Left && sel)
+                if (MouseEx.LeftClick && sel)
                 {
                     IsClicked = true;
                     

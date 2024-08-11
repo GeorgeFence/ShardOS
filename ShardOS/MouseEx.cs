@@ -29,7 +29,7 @@ namespace ShardOS
 
         public static void Mouse()
         {
-            if(MouseManager.MouseState == MouseState.Left && MouseManager.LastMouseState != MouseState.Left)
+            if( MouseManager.MouseState == MouseState.Left && MouseManager.LastMouseState != MouseState.Left)
             {
                 LeftClick = true;
             }

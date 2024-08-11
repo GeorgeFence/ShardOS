@@ -58,7 +58,7 @@ namespace ShardOS
                     IsDragging = false;
                     window.IsMoving = false;
                 }
-                if (MouseEx.IsMouseWithin(window.X, window.Y, (ushort)window.WinW, (ushort)window.WinH) && MouseManager.MouseState == MouseState.Left && MouseEx.LeftClick)
+                if (MouseEx.IsMouseWithin(window.X, window.Y, (ushort)window.WinW, (ushort)window.WinH) && MouseEx.LeftClick)
                 {
                     SelDone = true;
                     Selected = window.Title;
@@ -67,7 +67,7 @@ namespace ShardOS
                 {
                     if (MouseEx.IsMouseWithin(window.X + window.WinW - 24, window.Y, 24, 24))
                     {
-                        if (MouseManager.MouseState == MouseState.Left && MouseEx.LeftClick)
+                        if (MouseEx.LeftClick)
                         {
                             Stop(window);
                             SelDone = true;
@@ -98,7 +98,7 @@ namespace ShardOS
                     }
                 }
 
-                if (MouseEx.IsMouseWithin(window.X, window.Y, (ushort)window.WinW, (ushort)window.WinH) && !window.IsMoving && !IsDragging && MouseManager.MouseState == MouseState.Left && MouseEx.LeftClick && !SelDone && window.CanMove)
+                if (MouseEx.IsMouseWithin(window.X, window.Y, (ushort)window.WinW, (ushort)window.WinH) && !window.IsMoving && !IsDragging && MouseEx.LeftClick && !SelDone && window.CanMove)
                 {
                     Windows.Remove(window);
                     Windows.Insert(Windows.Count, window);
