@@ -1,6 +1,8 @@
 ﻿using Cosmos.Core;
 using Cosmos.Core.Memory;
 using Cosmos.HAL;
+using Cosmos.HAL.BlockDevice;
+using Cosmos.HAL.Network;
 using Cosmos.System;
 using Cosmos.System.Graphics;
 using Cosmos.System.Graphics.Fonts;
@@ -13,9 +15,12 @@ using System.Data;
 using System.Drawing;
 using System.Reflection;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks.Dataflow;
+using static Cosmos.HAL.BlockDevice.ATA_PIO;
 using static System.Net.Mime.MediaTypeNames;
 using Console = System.Console;
+using Global = Cosmos.System.Global;
 using Power = Cosmos.HAL.Power;
 using Sys = Cosmos.System;
 
@@ -97,11 +102,7 @@ namespace ShardOS
             DrawStatus("Initializing UAS");
             UAS.Initialize();
             DelayCode(500);
-            DrawStatus("Initializing GUI");
-            Desktop.Init((int)Mode.Width,(int)Mode.Height);
-            DelayCode(500);
-            DrawStatus("Starting GUI");
-            DelayCode(500);
+
             
             try
             {
@@ -113,8 +114,14 @@ namespace ShardOS
             {
                 DrawStatus("DesktopGrid: " + ex.Message, Color.Red);
             }
+            DrawStatus("Initializing GUI");
+            Desktop.Init((int)Mode.Width, (int)Mode.Height);
+            //Kernel.Canvas.Clear();
+            DrawStatus("Starting GUI");
+            DelayCode(500); 
             IsBooting = false;
-            Logon.Start();
+            //Logon.Start();
+            
         }
 
         protected override void Run()
@@ -135,12 +142,74 @@ namespace ShardOS
 
                 //Gui
                 Desktop.Update();
-
                 CobaltCore.CallCore();
             }
             catch(Exception ex)
             {
                 KernelPanic(ex.Message);
+            }
+        }
+        public static void DarkenBitmap(Bitmap image, float darkeningFactor)
+        {
+            darkeningFactor = Math.Clamp(darkeningFactor, 0f, 1f);
+
+            for (int y = 0; y < image.Height; y++)
+            {
+                for (int x = 0; x < image.Width; x++)
+                {
+                    Color originalColor = image.GetPointColor(x, y);
+
+                    int r = (int)(originalColor.R * darkeningFactor);
+                    int g = (int)(originalColor.G * darkeningFactor);
+                    int b = (int)(originalColor.B * darkeningFactor);
+
+                    Color darkenedColor = Color.FromArgb(originalColor.A, r, g, b);
+
+                    image.SetPixel(darkenedColor, x, y);
+                }
+            }
+        }
+        public static void ApplyBlur(Bitmap bitmap, int blurRadius)
+        {
+            uint width = bitmap.Width;
+            uint height = bitmap.Height;
+
+            // Loop through every pixel in the image
+            for (int x = 0; x < width; x++)
+            {
+                for (int y = 0; y < height; y++)
+                {
+                    int avgR = 0, avgG = 0, avgB = 0;
+                    int total = 0;
+
+                    // Loop through each surrounding pixel within the blur radius
+                    for (int blurX = -blurRadius; blurX <= blurRadius; blurX++)
+                    {
+                        for (int blurY = -blurRadius; blurY <= blurRadius; blurY++)
+                        {
+                            int pixelX = x + blurX;
+                            int pixelY = y + blurY;
+
+                            // Ensure pixel is within image bounds
+                            if (pixelX >= 0 && pixelX < width && pixelY >= 0 && pixelY < height)
+                            {
+                                Color pixelColor = bitmap.GetPointColor(pixelX, pixelY);
+                                avgR += pixelColor.R;
+                                avgG += pixelColor.G;
+                                avgB += pixelColor.B;
+                                total++;
+                            }
+                        }
+                    }
+
+                    // Calculate the average color for the current pixel
+                    avgR /= total;
+                    avgG /= total;
+                    avgB /= total;
+
+                    // Set the blurred pixel color
+                    bitmap.SetPixel(Color.FromArgb(avgR, avgG, avgB), x, y);
+                }
             }
         }
 

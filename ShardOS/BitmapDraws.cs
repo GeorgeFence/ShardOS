@@ -257,6 +257,17 @@ namespace ShardOS
                 }
             }
         }
+        public static void DrawImage(this Bitmap bmp, Bitmap image, int x, int y)
+        {
+            for (int i = 0; i < image.Width; i++)
+            {
+                for (int j = 0; j < image.Height; j++)
+                {
+                    Color color = Color.FromArgb(image.RawData[i + j * image.Width]);
+                    bmp.RawData[(x + i) + (y + j) * bmp.Width] = color.ToArgb();
+                }
+            }
+        }
         public static void DrawImagePart(this Bitmap bmp, Bitmap image, int x, int y,int w,int h,int ox = 0,int oy = 0)
         {
             for (int i = ox; i < w; i++)

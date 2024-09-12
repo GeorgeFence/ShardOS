@@ -2,6 +2,7 @@
 using Cosmos.HAL;
 using Cosmos.System;
 using Cosmos.System.Graphics;
+using Cosmos.System.Graphics.Fonts;
 using CosmosTTF;
 using ShardOS.Apps;
 using System;
@@ -28,6 +29,9 @@ namespace ShardOS
         public static Color DarkL = Color.FromArgb(45, 45, 45);
         public static Color DarkXL = Color.FromArgb(50, 50, 50);
 
+        public static Bitmap TB;
+        public static Bitmap BG;
+
         public static bool CanContinue = false;
         public static bool OnlyWindowsMouse = false;
 
@@ -40,9 +44,20 @@ namespace ShardOS
             surface = new CGSSurface(Kernel.Canvas);
             font = new TTFFont(Kernel.rawFontInter);
             CanContinue = true;
+            Kernel.Canvas.DrawImage(Desktop.wallpaper, 0, 0);
+            Kernel.Canvas.Display();
+            MouseEx.Init();
             DesktopGrid.Init();
+            TB = Kernel.Canvas.GetImage(0, (int)(Kernel.Canvas.Mode.Height - 40), (int)(Kernel.Canvas.Mode.Width), 40);
+            Kernel.ApplyBlur(TB, 5);
+            Kernel.DarkenBitmap(TB, 0.9f);
+            BG = new Bitmap((uint)w,(uint)h, ColorDepth.ColorDepth32);
+            BitmapDraws.DrawImageAlpha(TB, Kernel.Menu, 0, 0);
+            BG = wallpaper;
+            BitmapDraws.DrawImage(BG, TB, 0, (int)(BG.Height - TB.Height));
+            UAS.SetUserActive(new User("System", "", "0:\\Users\\System"));
         }
-
+        public static Bitmap fps = new Bitmap(200,16,ColorDepth.ColorDepth32);
         public static void Update()
         {
             try
@@ -59,14 +74,16 @@ namespace ShardOS
                     {
                         if (UAS.ActiveUser.Username != UAS.defaultuser.Username)
                         {
-                            Kernel.Canvas.DrawImage(wallpaper, 0, 0);
+                            Kernel.Canvas.DrawImage(BG, 0, 0);
                             if (!OnlyWindowsMouse)
                             {
-                                Taskbar.Draw();
+                                //Taskbar.Draw();
                                 DesktopGrid.Draw();
                             }
-                            WindowManager.Update(Kernel.Canvas);
-                            Desktop.DrawImageAlpha(cursor, (int)MouseManager.X, (int)MouseManager.Y);
+                            //WindowManager.Update(Kernel.Canvas);
+                            MouseEx.Eficcient();
+                            
+                            Kernel.Canvas.DrawImage(fps, 0, 0);
                             Kernel.Canvas.Display();
                         }
                         else
@@ -214,6 +231,21 @@ namespace ShardOS
                 }
             }
             Selected.RawData = l.ToArray();
+            Kernel.Canvas.DrawImage(Desktop.wallpaper, 0, 0);
+            Kernel.Canvas.Display();
+            for (int item = 0; item < gridItems.Count; item++)
+            {
+                Kernel.Canvas.DrawImage(gridItems[item].image, gridItems[item].x * 48 + offset, gridItems[item].y * 64 + UPoffset + offset, 48 - offset * 2, 48 - offset * 2);
+                Desktop.DrawToSurface(Desktop.surface, 14, gridItems[item].x * 48 + (24 - ((gridItems[item].Title.Length / 2) * 8)), gridItems[item].y * 64 + UPoffset + 48, gridItems[item].Title.ToString(), Color.WhiteSmoke);
+                Kernel.Canvas.Display();
+                gridItems[item].StateNormal = Kernel.Canvas.GetImage(gridItems[item].x * 48, gridItems[item].y * 64 + UPoffset,48,64);
+                Desktop.DrawImageAlpha(Selected, gridItems[item].x * 48, gridItems[item].y * 64 + UPoffset);
+                Kernel.Canvas.DrawImage(gridItems[item].image, gridItems[item].x * 48 + offset, gridItems[item].y * 64 + UPoffset + offset, 48 - offset * 2, 48 - offset * 2);
+                Desktop.DrawToSurface(Desktop.surface, 14, gridItems[item].x * 48 + (24 - ((gridItems[item].Title.Length / 2) * 8)), gridItems[item].y * 64 + UPoffset + 48, gridItems[item].Title.ToString(), Color.WhiteSmoke);
+                Kernel.Canvas.Display();
+                gridItems[item].StateSelected = Kernel.Canvas.GetImage(gridItems[item].x * 48, gridItems[item].y * 64 + UPoffset, 48, 64);
+            }
+            //Thread.Sleep(5000);
         }
         public static void Draw()
         {
@@ -222,12 +254,12 @@ namespace ShardOS
             {
                 if (gridItems[item].Selected == true)
                 {
-                    Desktop.DrawImageAlpha(Selected, gridItems[item].x * 48, gridItems[item].y * 64 + UPoffset);
-                    //Kernel.Canvas.DrawRectangle(Color.Blue, gridItems[item].x * 48, gridItems[item].y * 64 + UPoffset, 48, 64);
+                    Kernel.Canvas.DrawImage(gridItems[item].StateSelected, gridItems[item].x * 48, gridItems[item].y * 64 + UPoffset);
                 }
-                //Kernel.Canvas.DrawRectangle(Color.Azure, gridItems[item].x * 48, gridItems[item].y * 64 + UPoffset, 48, 64);
-                Kernel.Canvas.DrawImage(gridItems[item].image, gridItems[item].x * 48 + offset, gridItems[item].y * 64 + UPoffset + offset, 48 - offset * 2, 48 - offset * 2);
-                Desktop.DrawToSurface(Desktop.surface, 14, gridItems[item].x * 48 + (24 - ((gridItems[item].Title.Length / 2) * 8)), gridItems[item].y * 64 + UPoffset + 48, gridItems[item].Title.ToString(), Color.WhiteSmoke);
+                else
+                {
+                    Kernel.Canvas.DrawImage(gridItems[item].StateNormal, gridItems[item].x * 48, gridItems[item].y * 64 + UPoffset);
+                }
                 if (MouseEx.IsMouseWithin(gridItems[item].x * 48, gridItems[item].y * 64 + UPoffset, 48, 64) && MouseEx.LeftClick && gridItems[item].Selected)
                 {
                     gridItems[item].Selected = false;
@@ -277,6 +309,9 @@ namespace ShardOS
         public int x, y;
         public bool Selected = false;
         public int ExecutionID;
+
+        public Bitmap StateNormal =  new Bitmap(48,64,ColorDepth.ColorDepth32);
+        public Bitmap StateSelected =  new Bitmap(48,64,ColorDepth.ColorDepth32);
 
         public GridItem(string title, Bitmap image, int x, int y, int executionID)
         {

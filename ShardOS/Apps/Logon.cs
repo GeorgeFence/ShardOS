@@ -76,7 +76,7 @@ namespace ShardOS.Apps
                         {
                             UAS.ActiveUser = us;
                             Stop();
-                            MessageBox.Show("LogonUI", "User was Successfully loged in!");
+                            //MessageBox.Show("LogonUI", "User was Successfully loged in!");
                             //Welcome.Start();
                             //ShellApp.Start();
                         }
