@@ -1,0 +1,89 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net6.0</TargetFramework>
+        <!--<RuntimeIdentifier>cosmos</RuntimeIdentifier>-->
+        <Platform>cosmos</Platform>
+        <SupportsX86Intrinsics>false</SupportsX86Intrinsics>
+        <SelfContained>True</SelfContained>
+    </PropertyGroup>
+
+    <PropertyGroup>
+        <EnableGDB>False</EnableGDB>
+        <StartCosmosGDB>False</StartCosmosGDB>
+        <VisualStudioDebugPort>Pipe: Cosmos\Serial</VisualStudioDebugPort>
+        <CosmosDebugPort>Serial: COM1</CosmosDebugPort>
+        <Launch>VMware</Launch>
+        <Profile>VMware</Profile>
+        <Description>Use VMware Player or Workstation to deploy and debug.</Description>
+        <PxeInterface>192.168.0.8</PxeInterface>
+        <CompressionType>Gzip</CompressionType>
+        <RemoveBootDebugOutput>True</RemoveBootDebugOutput>
+        <DebugEnabled>False</DebugEnabled>
+        <VMWareEdition>Workstation</VMWareEdition>
+        <CompileVBEMultiboot>False</CompileVBEMultiboot>
+        <VBEResolution>1920x1080x32</VBEResolution>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <None Remove="build.txt" />
+      <None Remove="cursor.bmp" />
+      <None Remove="Files\bmp\application.bmp" />
+      <None Remove="Files\bmp\control.bmp" />
+      <None Remove="Files\bmp\cursor.bmp" />
+      <None Remove="Files\bmp\error.bmp" />
+      <None Remove="Files\bmp\exit.bmp" />
+      <None Remove="Files\bmp\logo.bmp" />
+      <None Remove="Files\bmp\logo30.bmp" />
+      <None Remove="Files\bmp\menu.bmp" />
+      <None Remove="Files\bmp\power.bmp" />
+      <None Remove="Files\bmp\serviceapp.bmp" />
+      <None Remove="Files\bmp\setting.bmp" />
+      <None Remove="Files\bmp\systemapp.bmp" />
+      <None Remove="Files\bmp\user.bmp" />
+      <None Remove="Files\bmp\userapp.bmp" />
+      <None Remove="Files\bmp\wallpaper.bmp" />
+      <None Remove="Files\ttf\Inter.ttf" />
+      <None Remove="Files\ttf\Ubuntu.ttf" />
+      <None Remove="logo.bmp" />
+      <None Remove="logo.png" />
+      <None Remove="logo30.bmp" />
+      <None Remove="wallpaper.bmp" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <EmbeddedResource Include="build.txt" />
+      <EmbeddedResource Include="Files\bmp\application.bmp" />
+      <EmbeddedResource Include="Files\bmp\control.bmp" />
+      <EmbeddedResource Include="Files\bmp\cursor.bmp" />
+      <EmbeddedResource Include="Files\bmp\error.bmp" />
+      <EmbeddedResource Include="Files\bmp\exit.bmp" />
+      <EmbeddedResource Include="Files\bmp\logo.bmp" />
+      <EmbeddedResource Include="Files\bmp\logo30.bmp" />
+      <EmbeddedResource Include="Files\bmp\menu.bmp" />
+      <EmbeddedResource Include="Files\bmp\power.bmp" />
+      <EmbeddedResource Include="Files\bmp\serviceapp.bmp" />
+      <EmbeddedResource Include="Files\bmp\setting.bmp" />
+      <EmbeddedResource Include="Files\bmp\systemapp.bmp" />
+      <EmbeddedResource Include="Files\bmp\user.bmp" />
+      <EmbeddedResource Include="Files\bmp\userapp.bmp" />
+      <EmbeddedResource Include="Files\bmp\wallpaper.bmp" />
+      <EmbeddedResource Include="Files\ttf\Inter.ttf" />
+      <EmbeddedResource Include="Files\ttf\Ubuntu.ttf" />
+      <EmbeddedResource Include="logo.png" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Cosmos.Build" Version="0-*" NoWarn="NU1604" />
+        <PackageReference Include="Cosmos.Core" Version="0.1.0-localbuild20240624025848" />
+        <PackageReference Include="Cosmos.Debug.Kernel" Version="0-*" NoWarn="NU1604" />
+        <PackageReference Include="Cosmos.System2" Version="0-*" NoWarn="NU1604" />
+        <PackageReference Include="Cosmos.Plugs" Version="0-*" NoWarn="NU1604" />
+        <PackageReference Include="CosmosTTF" Version="4.0.1" />
+    </ItemGroup>
+
+    <Target Name="PreBuild" BeforeTargets="PreBuildEvent">
+      <Exec Command="call buildnumber.bat" />
+    </Target>
+
+</Project>
