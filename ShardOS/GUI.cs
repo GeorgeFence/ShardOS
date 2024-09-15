@@ -74,9 +74,13 @@ namespace ShardOS
                     {
                         if (UAS.ActiveUser.Username != UAS.defaultuser.Username)
                         {
-                            //Kernel.Canvas.DrawImage(BG, 0, 0); 
-                            DesktopGrid.Draw();
-                            WindowManager.Update(Kernel.Canvas);
+                            Kernel.Canvas.DrawImage(BG, 0, 0);
+                            if (!OnlyWindowsMouse)
+                            {
+                                //Taskbar.Draw();
+                                DesktopGrid.Draw();
+                            }
+                            //WindowManager.Update(Kernel.Canvas);
                             MouseEx.Eficcient();
                             
                             Kernel.Canvas.DrawImage(fps, 0, 0);
